@@ -21,10 +21,12 @@ import dayjs from "dayjs";
 import {Popover, PopoverContent, PopoverTrigger} from "@nextui-org/popover";
 import {Calendar} from "@nextui-org/calendar";
 import {parseDate} from "@internationalized/date";
+import {useDebounce} from "use-debounce";
 
 function ProblemQuestionList() {
     const [currentPage, setCurrentPage] = useState(1)
-    const storeSnap = useSnapshot(store)
+    // const storeSnap = useSnapshot(store)
+    const storeSnap = useDebounce(useSnapshot(store), 1000)
     const [calendarValue, setCalendarValue] = useState(parseDate(dayjs().format("YYYY-MM-DD")))
 
     useEffect(() => {
