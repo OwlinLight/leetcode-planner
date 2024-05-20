@@ -7,8 +7,7 @@ import {Navbar} from "@/components/navbar";
 import {Link} from "@nextui-org/link";
 import clsx from "clsx";
 
-import {ApolloProvider} from '@apollo/client';
-import client from './apollo'; // Import the Apollo client
+import { Toaster, toast } from 'sonner';
 
 export const metadata: Metadata = {
     title: {
@@ -42,12 +41,13 @@ export default function RootLayout({
                 fontSans.variable
             )}
         >
-        <Providers themeProps={{attribute: "class", defaultTheme: "dark"}}>
+        <Providers themeProps={{attribute: "class", defaultTheme: "light"}}>
             <div className="relative flex flex-col h-screen">
                 <Navbar/>
                 <main className="container mx-auto max-w-7xl px-6 flex-grow">
                     {children}
                 </main>
+                <Toaster />
             </div>
         </Providers>
         </body>

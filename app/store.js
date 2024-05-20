@@ -4,6 +4,7 @@ import {gql} from "@apollo/client";
 import client from "@/app/apollo";
 
 export const store = proxy({
+    todos: [],
     problemQuestionList: [],
     // total -> pagination
     total: 0,
@@ -55,7 +56,7 @@ export const store = proxy({
             })
             this.total = data.problemsetQuestionList.total
             this.problemQuestionList = data.problemsetQuestionList.questions
-            console.log(data.problemsetQuestionList)
+            // console.log(data.problemsetQuestionList)
         } else {
             const {data, errors, loading} = await client.query({
                 query: PROBLEMSET_QUESTION_LIST_QUERY, variables: {
@@ -67,9 +68,9 @@ export const store = proxy({
             })
             this.total = data.problemsetQuestionList.total
             this.problemQuestionList = data.problemsetQuestionList.questions
-            console.log(data.problemsetQuestionList)
+            // console.log(data.problemsetQuestionList)
         }
 
         this.isLoading = false;
-    }
+    },
 })
