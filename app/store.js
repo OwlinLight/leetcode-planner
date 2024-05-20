@@ -8,7 +8,7 @@ export const store = proxy({
     // total -> pagination
     total: 0,
     isLoading: true,
-    async fetchData(pageNumber = 1, searchKeywords: string) {
+    async fetchData(pageNumber = 1, searchKeywords) {
         this.isLoading = true
 
         const PROBLEMSET_QUESTION_LIST_QUERY = gql`
