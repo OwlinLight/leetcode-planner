@@ -2,14 +2,15 @@
 import {proxy} from "valtio";
 import {gql} from "@apollo/client";
 import client from "@/app/apollo";
-
+import {useDebounce} from "use-debounce";
 export const store = proxy({
+    searchKeyWords: "",
     todos: [],
     problemQuestionList: [],
     // total -> pagination
     total: 0,
     isLoading: true,
-    async fetchData(pageNumber = 1, searchKeywords) {
+    async fetchData(pageNumber = 1) {
         this.isLoading = true
 
         const PROBLEMSET_QUESTION_LIST_QUERY = gql`
@@ -43,14 +44,14 @@ export const store = proxy({
           }
         `;
 
-        if (searchKeywords) {
+        if (this.searchKeyWords !== "") {
             const {data, errors, loading} = await client.query({
                 query: PROBLEMSET_QUESTION_LIST_QUERY, variables: {
                     categorySlug: 'all-code-essentials',
                     skip: 50 * (pageNumber - 1),
                     limit: 50,
                     filters: {
-                        searchKeywords: searchKeywords
+                        searchKeywords: this.searchKeyWords
                     },
                 }
             })

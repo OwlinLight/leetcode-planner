@@ -31,11 +31,16 @@ import {
 
 import {Logo} from "@/components/icons";
 import {store} from "@/app/store";
+import _ from "lodash";
 
 
 export const Navbar = () => {
     async function search(ev: any) {
-        await store.fetchData(1, ev.target.value)
+        store.searchKeyWords = ev.target.value
+        console.log(store.searchKeyWords)
+        setTimeout(async function () {
+            await store.fetchData(1)
+        }, 1000)
     }
 
     const searchInput = (
@@ -51,7 +56,7 @@ export const Navbar = () => {
                 </Kbd>
             }
             labelPlacement="outside"
-            placeholder="Space To Finish Search"
+            placeholder="Search..."
             startContent={
                 <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0"/>
             }
@@ -96,7 +101,7 @@ export const Navbar = () => {
                     <Link isExternal href={siteConfig.links.github} aria-label="Github">
                         <GithubIcon className="text-default-500"/>
                     </Link>
-                    <ThemeSwitch/>
+                    {/*<ThemeSwitch/>*/}
                 </NavbarItem>
 
                 {/* <NavbarItem className="hidden md:flex">

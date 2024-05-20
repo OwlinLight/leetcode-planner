@@ -25,8 +25,8 @@ import {useDebounce} from "use-debounce";
 
 function ProblemQuestionList() {
     const [currentPage, setCurrentPage] = useState(1)
-    // const storeSnap = useSnapshot(store)
-    const storeSnap = useDebounce(useSnapshot(store), 1000)
+    const storeSnap = useSnapshot(store)
+    // const storeSnap = useDebounce(useSnapshot(store), 1000)
     const [calendarValue, setCalendarValue] = useState(parseDate(dayjs().format("YYYY-MM-DD")))
 
     useEffect(() => {
