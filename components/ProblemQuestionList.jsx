@@ -77,32 +77,24 @@ function ProblemQuestionList() {
     }
 
     function addTodayTodo(question) {
-        const today = dayjs();
-        const formattedDateToday = today.format('YYYY-MM-DD');
-        question.todoDate = formattedDateToday
-        console.log(question)
-
-        addTodo(question)
+        const questionWithTodoDate = {...question, todoDate: today}
+        addTodo(questionWithTodoDate)
     }
 
     function addTomorrowTodo(question) {
-        const tomorrow = dayjs().add(1, 'day');
-        const formattedDateTomorrow = tomorrow.format('YYYY-MM-DD');
-        question.todoDate = formattedDateTomorrow
-        console.log(question)
-
-        addTodo(question)
+        const tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD');
+        const questionWithTodoDate = {...question, todoDate: tomorrow}
+        addTodo(questionWithTodoDate)
     }
 
     function onCalendarChange(question) {
-
         return (dateObj) => {
             setCalendarValue(dateObj)
             // console.log(dateObj)
             let date = `${dateObj.year}-${dateObj.month}-${dateObj.day}`
             date = dayjs(date).format('YYYY-MM-DD')
-            question.todoDate = date
-            addTodo(question)
+            const questionWithTodoDate = {...question, todoDate: date}
+            addTodo(questionWithTodoDate)
         }
     }
 
