@@ -1,7 +1,5 @@
 "use client"
 
-import {ApolloProvider} from "@apollo/client";
-import client from "@/app/apollo";
 import {Calendar} from "@nextui-org/calendar";
 
 import {store} from "@/app/store";
@@ -34,11 +32,10 @@ function QuestionLi({question}) {
 
 export default function Home() {
     const storeSnap = useSnapshot(store)
-    // local value
-    const today = parseDate(dayjs().format("YYYY-MM-DD"))
-    const [calendarValue, setCalendarValue] = useState(today)
-    // const [date, setDate] = useState("")
+    const today = dayjs().format("YYYY-MM-DD")
+    const [calendarValue, setCalendarValue] = useState(parseDate(today))
 
+    // group todos by date
     const groupedTodos = storeSnap.todos.reduce((acc, todo) => {
         const date = todo.todoDate;
         if (!acc[date]) {
@@ -48,8 +45,6 @@ export default function Home() {
         return acc;
     }, {});
 
-    console.log(groupedTodos)
-
     function onCalendarChange(dateObj) {
         // console.log(dateObj)
         let date = `${dateObj.year}-${dateObj.month}-${dateObj.day}`
@@ -57,6 +52,11 @@ export default function Home() {
         setCalendarValue(parseDate(date))
         store.todosDateFilter = date
         console.log(date)
+    }
+
+    function onChipDateFilterClose() {
+        store.todosDateFilter = ""
+        setCalendarValue(parseDate(today))
     }
 
     function dateToHeadingText(date) {
@@ -74,64 +74,53 @@ export default function Home() {
         }
     }
 
-    function onChipDateFilterClose() {
-        store.todosDateFilter = ""
-        setCalendarValue(today)
-    }
-
     return (
-        <ApolloProvider client={client}>
-            <div className="flex flex-row justify-between my-2">
-                {
-                    storeSnap.todosDateFilter !== ""
-                        ? (<div>
-                            <Chip onClose={onChipDateFilterClose} variant="bordered">
-                                {storeSnap.todosDateFilter}
-                            </Chip>
-                            <div>
-                                {storeSnap.todos
-                                    .filter(todo => {
-                                        return todo.todoDate === storeSnap.todosDateFilter
-                                    })
-                                    .map((todo, index) => {
-                                        return (
-                                            <div key={todo.frontendQuestionId}>
-                                                {index === 0 && <h2 className="text-2xl font-bold"> {todo.todoDate}</h2>}
-                                                <QuestionLi question={todo}/>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
-                        </div>)
-                        : (<div>
-                            {Object.entries(groupedTodos)
-                                .sort(([dateA], [dateB]) => dayjs(dateA).diff(dayjs(dateB)))
-                                .map(([date, todos]) => (
-                                    <div key={date}>
-                                        <h2 className="text-2xl font-bold">
-                                            {dateToHeadingText(date)}
-                                        </h2>
-                                        <ul>
-                                            {todos.map((todo) => (
-                                                <QuestionLi question={todo} key={todo.frontendQuestionId}/>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                ))}
-                        </div>)
-                }
-
-
-                <div>
-                    <Calendar
-                        onChange={onCalendarChange}
-                        value={calendarValue}
-                    />
-                </div>
+        <div className="flex flex-row justify-between my-2">
+            {
+                storeSnap.todosDateFilter !== ""
+                    ? (<div>
+                        <Chip onClose={onChipDateFilterClose} variant="bordered">
+                            {storeSnap.todosDateFilter}
+                        </Chip>
+                        <div>
+                            {storeSnap.todos
+                                .filter(todo => {
+                                    return todo.todoDate === storeSnap.todosDateFilter
+                                })
+                                .map((todo, index) => {
+                                    return (
+                                        <div key={todo.frontendQuestionId}>
+                                            {index === 0 && <h2 className="text-2xl font-bold"> {todo.todoDate}</h2>}
+                                            <QuestionLi question={todo}/>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>)
+                    : (<div>
+                        {Object.entries(groupedTodos)
+                            .sort(([dateA], [dateB]) => dayjs(dateA).diff(dayjs(dateB)))
+                            .map(([date, todos]) => (
+                                <div key={date}>
+                                    <h2 className="text-2xl font-bold">
+                                        {dateToHeadingText(date)}
+                                    </h2>
+                                    <ul>
+                                        {todos.map((todo) => (
+                                            <QuestionLi question={todo} key={todo.frontendQuestionId}/>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                    </div>)
+            }
+            <div>
+                <Calendar
+                    onChange={onCalendarChange}
+                    value={calendarValue}
+                />
             </div>
-
-        </ApolloProvider>
+        </div>
     )
-        ;
 }

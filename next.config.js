@@ -3,8 +3,8 @@ const nextConfig = {
     async rewrites() {
         return [
             {
-                source: '/graphql', // Match requests starting with /api
-                destination: 'https://leetcode.com/graphql', // Proxy to your API
+                source: '/graphql', // request local api
+                destination: 'https://leetcode.com/graphql', // forward to leetcode
             },
         ];
     },

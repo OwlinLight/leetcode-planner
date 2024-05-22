@@ -1,9 +1,7 @@
-// store.ts
+// store.js
 import {proxy} from "valtio";
 import {gql} from "@apollo/client";
 import client from "@/app/apollo";
-import {useDebounce} from "use-debounce";
-import dayjs from "dayjs";
 
 const PROBLEMSET_QUESTION_LIST_QUERY = gql`
           query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) {
@@ -42,6 +40,8 @@ export const store = proxy({
     todosDateFilter: "",
     // total -> pagination
     total: 0,
+    // this page number is just for UI
+    pageNumber: 1,
     problemQuestionList: [],
     searchKeyWords: "",
     async fetchData(pageNumber = 1) {
@@ -57,6 +57,7 @@ export const store = proxy({
         })
         this.total = data.problemsetQuestionList.total
         this.problemQuestionList = data.problemsetQuestionList.questions
+        this.pageNumber = pageNumber
         this.isLoading = false;
     },
     async searchProblems(pageNumber = 1) {
@@ -77,6 +78,7 @@ export const store = proxy({
         })
         this.total = data.problemsetQuestionList.total
         this.problemQuestionList = data.problemsetQuestionList.questions
+        this.pageNumber = pageNumber
         this.isLoading = false
     }
 })
