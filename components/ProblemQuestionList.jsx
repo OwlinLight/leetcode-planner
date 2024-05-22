@@ -26,10 +26,13 @@ import {ApolloProvider} from "@apollo/client";
 import client from "@/app/apollo";
 
 function ProblemQuestionList() {
+    const today = dayjs().format("YYYY-MM-DD")
     const [currentPage, setCurrentPage] = useState(1)
     const storeSnap = useSnapshot(store)
     // const storeSnap = useDebounce(useSnapshot(store), 1000)
     const [calendarValue, setCalendarValue] = useState(parseDate(dayjs().format("YYYY-MM-DD")))
+
+    const [isPopoverShow, setIsPopoverShow] = useState(false)
 
     useEffect(() => {
         store.fetchData()
@@ -154,7 +157,9 @@ function ProblemQuestionList() {
                                                 Tomorrow
                                             </button>
 
-                                            <Popover placement="bottom" showArrow={true}>
+                                            <Popover
+                                                placement="bottom"
+                                                onClose={() => setCalendarValue(parseDate(today))}>
                                                 <PopoverTrigger>
                                                     <button className="btn btn-ghost">...</button>
                                                 </PopoverTrigger>
