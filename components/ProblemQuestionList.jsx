@@ -22,6 +22,8 @@ import {Popover, PopoverContent, PopoverTrigger} from "@nextui-org/popover";
 import {Calendar} from "@nextui-org/calendar";
 import {parseDate} from "@internationalized/date";
 import {useDebounce} from "use-debounce";
+import {ApolloProvider} from "@apollo/client";
+import client from "@/app/apollo";
 
 function ProblemQuestionList() {
     const [currentPage, setCurrentPage] = useState(1)
@@ -59,8 +61,7 @@ function ProblemQuestionList() {
     function addTodo(question) {
         const isExist = storeSnap.todos.some(todo => todo.frontendQuestionId === question.frontendQuestionId)
         if (isExist) {
-            // FIXME: update if exist
-            toast.error("It's already in your todo list")
+            toast.success("Updated Date")
         } else {
             store.todos.push(question)
             toast.success("Added to your today todo list")
@@ -90,92 +91,94 @@ function ProblemQuestionList() {
         return (dateObj) => {
             setCalendarValue(dateObj)
             // console.log(dateObj)
-            const date = `${dateObj.year}-${dateObj.month}-${dateObj.day}`
-            console.log(date)
+            let date = `${dateObj.year}-${dateObj.month}-${dateObj.day}`
+            date = dayjs(date).format('YYYY-MM-DD')
             question.todoDate = date
             addTodo(question)
         }
     }
 
     return (
-        <div className="my-2">
-            <Table aria-label="leetcode table" className="mb-6">
-                <TableHeader>
-                    <TableColumn>Title</TableColumn>
-                    <TableColumn>Difficulty</TableColumn>
-                    <TableColumn>AC Rate</TableColumn>
-                    {/*<TableColumn>Status</TableColumn>*/}
-                    <TableColumn>Schedule</TableColumn>
-                </TableHeader>
-                <TableBody>
-                    {store.problemQuestionList.map((question) => {
-                        return (
-                            <TableRow key={question.frontendQuestionId}>
-                                <TableCell className="max-w-40">
-                                    <Link className="text-black hover:text-blue-500" isExternal
-                                          href={`https://leetcode.com/problems/${question.titleSlug}`}>
-                                        <p>{question.frontendQuestionId}. {question.title}</p>
-                                    </Link>
-                                    <div className="flex flex-row flex-wrap">
-                                        {question.topicTags.map(tag => {
-                                            return (
-                                                <div className="mr-2 mt-2 badge badge-ghost"
-                                                     key={tag.id}>{tag.name}</div>
-                                            )
-                                        })}
-                                    </div>
-                                    {question.paidOnly && <div className="badge badge-warning mr-2 mt-2">
-                                        Premium
-                                    </div>}
+        <ApolloProvider client={client}>
+            <div className="my-2">
+                <Table aria-label="leetcode table" className="mb-6">
+                    <TableHeader>
+                        <TableColumn>Title</TableColumn>
+                        <TableColumn>Difficulty</TableColumn>
+                        <TableColumn>AC Rate</TableColumn>
+                        {/*<TableColumn>Status</TableColumn>*/}
+                        <TableColumn>Schedule</TableColumn>
+                    </TableHeader>
+                    <TableBody>
+                        {store.problemQuestionList.map((question) => {
+                            return (
+                                <TableRow key={question.frontendQuestionId}>
+                                    <TableCell className="max-w-40">
+                                        <Link className="text-black hover:text-blue-500" isExternal
+                                              href={`https://leetcode.com/problems/${question.titleSlug}`}>
+                                            <p>{question.frontendQuestionId}. {question.title}</p>
+                                        </Link>
+                                        <div className="flex flex-row flex-wrap">
+                                            {question.topicTags.map(tag => {
+                                                return (
+                                                    <div className="mr-2 mt-2 badge badge-ghost"
+                                                         key={tag.id}>{tag.name}</div>
+                                                )
+                                            })}
+                                        </div>
+                                        {question.paidOnly && <div className="badge badge-warning mr-2 mt-2">
+                                            Premium
+                                        </div>}
 
-                                </TableCell>
-                                <TableCell>
-                                    <p style={{color: difficultyColors[question.difficulty]}}>{question.difficulty}</p>
-                                </TableCell>
-                                <TableCell>
-                                    {question.acRate.toFixed(1)}%
-                                </TableCell>
-                                {/*<TableCell>*/}
-                                {/*    Todo/Redo/Done*/}
-                                {/*</TableCell>*/}
-                                <TableCell>
-                                    <div className="flex flex-row">
-                                        <button
-                                            className="btn btn-ghost"
-                                            onClick={() => addTodayTodo(question)}>
-                                            Today
-                                        </button>
+                                    </TableCell>
+                                    <TableCell>
+                                        <p style={{color: difficultyColors[question.difficulty]}}>{question.difficulty}</p>
+                                    </TableCell>
+                                    <TableCell>
+                                        {question.acRate.toFixed(1)}%
+                                    </TableCell>
+                                    {/*<TableCell>*/}
+                                    {/*    Todo/Redo/Done*/}
+                                    {/*</TableCell>*/}
+                                    <TableCell>
+                                        <div className="flex flex-row">
+                                            <button
+                                                className="btn btn-ghost"
+                                                onClick={() => addTodayTodo(question)}>
+                                                Today
+                                            </button>
 
-                                        <button
-                                            className="btn btn-ghost"
-                                            onClick={() => addTomorrowTodo(question)}>
-                                            Tomorrow
-                                        </button>
+                                            <button
+                                                className="btn btn-ghost"
+                                                onClick={() => addTomorrowTodo(question)}>
+                                                Tomorrow
+                                            </button>
 
-                                        <Popover placement="bottom" showArrow={true}>
-                                            <PopoverTrigger>
-                                                <button className="btn btn-ghost">...</button>
-                                            </PopoverTrigger>
-                                            <PopoverContent>
-                                                <Calendar onChange={onCalendarChange(question)}
-                                                          value={calendarValue}/>
-                                            </PopoverContent>
-                                        </Popover>
+                                            <Popover placement="bottom" showArrow={true}>
+                                                <PopoverTrigger>
+                                                    <button className="btn btn-ghost">...</button>
+                                                </PopoverTrigger>
+                                                <PopoverContent>
+                                                    <Calendar onChange={onCalendarChange(question)}
+                                                              value={calendarValue}/>
+                                                </PopoverContent>
+                                            </Popover>
 
 
-                                        {/*<button className="btn btn-ghost">Inbox</button>*/}
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        )
-                    })}
-                </TableBody>
-            </Table>
-            <div className="flex justify-center mb-6">
-                <Pagination total={Math.ceil(store.total / 50)} page={currentPage} showControls
-                            onChange={onPageNumberChange}/>
+                                            {/*<button className="btn btn-ghost">Inbox</button>*/}
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        })}
+                    </TableBody>
+                </Table>
+                <div className="flex justify-center mb-6">
+                    <Pagination total={Math.ceil(store.total / 50)} page={currentPage} showControls
+                                onChange={onPageNumberChange}/>
+                </div>
             </div>
-        </div>
+        </ApolloProvider>
     );
 }
 
