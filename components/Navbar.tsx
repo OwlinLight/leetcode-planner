@@ -1,44 +1,34 @@
-"use client"
+"use client";
 
-import {
-    Navbar as NextUINavbar,
-    NavbarContent,
-    NavbarMenu,
-    NavbarMenuToggle,
-    NavbarBrand,
-    NavbarItem,
-    NavbarMenuItem,
-} from "@nextui-org/navbar";
-import {Button} from "@nextui-org/button";
+import {Input} from "@nextui-org/input";
 import {Kbd} from "@nextui-org/kbd";
 import {Link} from "@nextui-org/link";
-import {Input} from "@nextui-org/input";
-
+import {
+    NavbarBrand,
+    NavbarContent,
+    NavbarItem,
+    NavbarMenu,
+    NavbarMenuItem,
+    NavbarMenuToggle,
+    Navbar as NextUINavbar,
+} from "@nextui-org/navbar";
 import {link as linkStyles} from "@nextui-org/theme";
 
 import {siteConfig} from "@/config/site";
-import NextLink from "next/link";
 import clsx from "clsx";
+import NextLink from "next/link";
 
-import {ThemeSwitch} from "@/components/theme-switch";
-import {
-    TwitterIcon,
-    GithubIcon,
-    DiscordIcon,
-    HeartFilledIcon,
-    SearchIcon,
-} from "@/components/icons";
-
-import {Logo} from "@/components/icons";
 import {store} from "@/app/store";
-
+import {GithubIcon, SearchIcon} from "@/components/Icons";
+import {ThemeSwitch} from "@/components/ThemeSwitch";
+import type React from "react";
 
 export const Navbar = () => {
-    async function search(ev: any) {
-        store.searchKeyWords = ev.target.value
-        setTimeout(async function () {
-            await store.searchProblems()
-        }, 1000)
+    async function search(ev: React.ChangeEvent<HTMLInputElement>) {
+        store.searchKeyWords = ev.target.value;
+        setTimeout(async () => {
+            await store.searchProblems();
+        }, 1000);
     }
 
     const searchInput = (
@@ -56,7 +46,7 @@ export const Navbar = () => {
             labelPlacement="outside"
             placeholder="Search..."
             startContent={
-                <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0"/>
+                <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
             }
             type="search"
             onChange={search}
@@ -69,7 +59,7 @@ export const Navbar = () => {
                 <NavbarBrand as="li" className="gap-3 max-w-fit">
                     <NextLink className="flex justify-start items-center gap-1" href="/">
                         {/*<Logo />*/}
-                        <p className="font-bold text-inherit">LeetCode Scheduler</p>
+                        <p className="font-bold text-inherit">Leetcode Planner</p>
                     </NextLink>
                 </NavbarBrand>
                 <ul className="hidden lg:flex gap-4 justify-start ml-2">
@@ -77,8 +67,8 @@ export const Navbar = () => {
                         <NavbarItem key={item.href}>
                             <NextLink
                                 className={clsx(
-                                    linkStyles({color: "foreground"}),
-                                    "data-[active=true]:text-primary data-[active=true]:font-medium"
+                                    linkStyles({ color: "foreground" }),
+                                    "data-[active=true]:text-primary data-[active=true]:font-medium",
                                 )}
                                 color="foreground"
                                 href={item.href}
@@ -97,7 +87,7 @@ export const Navbar = () => {
                 <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
                 <NavbarItem className="hidden sm:flex gap-2">
                     <Link isExternal href={siteConfig.links.github} aria-label="Github">
-                        <GithubIcon className="text-default-500"/>
+                        <GithubIcon className="text-default-500" />
                     </Link>
                     {/*<ThemeSwitch/>*/}
                 </NavbarItem>
@@ -118,10 +108,10 @@ export const Navbar = () => {
 
             <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
                 <Link isExternal href={siteConfig.links.github} aria-label="Github">
-                    <GithubIcon className="text-default-500"/>
+                    <GithubIcon className="text-default-500" />
                 </Link>
-                <ThemeSwitch/>
-                <NavbarMenuToggle/>
+                <ThemeSwitch />
+                <NavbarMenuToggle />
             </NavbarContent>
 
             <NavbarMenu>
