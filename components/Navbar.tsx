@@ -1,27 +1,27 @@
 "use client";
 
+import {Input} from "@nextui-org/input";
+import {Kbd} from "@nextui-org/kbd";
+import {Link} from "@nextui-org/link";
 import {
-    Navbar as NextUINavbar,
     NavbarBrand,
     NavbarContent,
     NavbarItem,
     NavbarMenu,
     NavbarMenuItem,
     NavbarMenuToggle,
+    Navbar as NextUINavbar,
 } from "@nextui-org/navbar";
-import {Kbd} from "@nextui-org/kbd";
-import {Link} from "@nextui-org/link";
-import {Input} from "@nextui-org/input";
 
 import {link as linkStyles} from "@nextui-org/theme";
 
 import {siteConfig} from "@/config/site";
-import NextLink from "next/link";
 import clsx from "clsx";
+import NextLink from "next/link";
 
-import {ThemeSwitch} from "@/components/ThemeSwitch";
-import {GithubIcon, SearchIcon} from "@/components/Icons";
 import {store} from "@/app/store";
+import {GithubIcon, SearchIcon} from "@/components/Icons";
+import {ThemeSwitch} from "@/components/ThemeSwitch";
 import type React from "react";
 
 export const Navbar = () => {
