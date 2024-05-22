@@ -47,7 +47,12 @@ function ProblemQuestionList() {
     }
 
     async function onPageNumberChange(pageNumber) {
-        await store.fetchData(pageNumber)
+        store.pageNumber = pageNumber
+        if (storeSnap.searchKeyWords === "") {
+            await store.fetchData()
+        } else {
+            await store.searchKeyWords()
+        }
         setCurrentPage(pageNumber)
         window.scrollTo({
             top: 0,
@@ -113,7 +118,7 @@ function ProblemQuestionList() {
                         <TableColumn>Schedule</TableColumn>
                     </TableHeader>
                     <TableBody>
-                        {store.problemQuestionList.map((question) => {
+                        {storeSnap.problemQuestionList.map((question) => {
                             return (
                                 <TableRow key={question.frontendQuestionId}>
                                     <TableCell className="max-w-40">
