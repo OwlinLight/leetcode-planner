@@ -56,7 +56,7 @@ export default function Home() {
 
     function onChipDateFilterClose() {
         store.todosDateFilter = ""
-        setCalendarValue(today)
+        setCalendarValue(parseDate(today))
     }
 
     function dateToHeadingText(date) {

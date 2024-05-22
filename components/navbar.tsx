@@ -36,7 +36,6 @@ import {store} from "@/app/store";
 export const Navbar = () => {
     async function search(ev: any) {
         store.searchKeyWords = ev.target.value
-        console.log(store.searchKeyWords)
         setTimeout(async function () {
             await store.searchProblems()
         }, 1000)
