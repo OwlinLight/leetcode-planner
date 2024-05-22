@@ -31,7 +31,6 @@ import {
 
 import {Logo} from "@/components/icons";
 import {store} from "@/app/store";
-import _ from "lodash";
 
 
 export const Navbar = () => {
@@ -39,7 +38,7 @@ export const Navbar = () => {
         store.searchKeyWords = ev.target.value
         console.log(store.searchKeyWords)
         setTimeout(async function () {
-            await store.fetchData(1)
+            await store.searchProblems()
         }, 1000)
     }
 

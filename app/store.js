@@ -3,17 +3,9 @@ import {proxy} from "valtio";
 import {gql} from "@apollo/client";
 import client from "@/app/apollo";
 import {useDebounce} from "use-debounce";
-export const store = proxy({
-    searchKeyWords: "",
-    todos: [],
-    problemQuestionList: [],
-    // total -> pagination
-    total: 0,
-    isLoading: true,
-    async fetchData(pageNumber = 1) {
-        this.isLoading = true
+import dayjs from "dayjs";
 
-        const PROBLEMSET_QUESTION_LIST_QUERY = gql`
+const PROBLEMSET_QUESTION_LIST_QUERY = gql`
           query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) {
             problemsetQuestionList: questionList(
               categorySlug: $categorySlug
@@ -44,34 +36,43 @@ export const store = proxy({
           }
         `;
 
-        if (this.searchKeyWords !== "") {
-            const {data, errors, loading} = await client.query({
-                query: PROBLEMSET_QUESTION_LIST_QUERY, variables: {
-                    categorySlug: 'all-code-essentials',
-                    skip: 50 * (pageNumber - 1),
-                    limit: 50,
-                    filters: {
-                        searchKeywords: this.searchKeyWords
-                    },
-                }
-            })
-            this.total = data.problemsetQuestionList.total
-            this.problemQuestionList = data.problemsetQuestionList.questions
-            // console.log(data.problemsetQuestionList)
-        } else {
-            const {data, errors, loading} = await client.query({
-                query: PROBLEMSET_QUESTION_LIST_QUERY, variables: {
-                    categorySlug: '',
-                    skip: 50 * (pageNumber - 1),
-                    limit: 50,
-                    filters: {},
-                }
-            })
-            this.total = data.problemsetQuestionList.total
-            this.problemQuestionList = data.problemsetQuestionList.questions
-            // console.log(data.problemsetQuestionList)
-        }
+export const store = proxy({
+    isLoading: true,
+    todos: [],
+    todosDateFilter: "",
+    // total -> pagination
+    total: 0,
+    problemQuestionList: [],
+    searchKeyWords: dayjs().format('YYYY-MM-DD'),
+    async fetchData(pageNumber = 1) {
+        this.isLoading = true
 
+        const {data, errors, loading} = await client.query({
+            query: PROBLEMSET_QUESTION_LIST_QUERY, variables: {
+                categorySlug: '',
+                skip: 50 * (pageNumber - 1),
+                limit: 50,
+                filters: {},
+            }
+        })
+        this.total = data.problemsetQuestionList.total
+        this.problemQuestionList = data.problemsetQuestionList.questions
+        console.log(data.problemsetQuestionList)
         this.isLoading = false;
     },
+    async searchProblems() {
+        const {data, errors, loading} = await client.query({
+            query: PROBLEMSET_QUESTION_LIST_QUERY, variables: {
+                categorySlug: 'all-code-essentials',
+                skip: 50 * (pageNumber - 1),
+                limit: 50,
+                filters: {
+                    searchKeywords: this.searchKeyWords
+                },
+            }
+        })
+        this.total = data.problemsetQuestionList.total
+        this.problemQuestionList = data.problemsetQuestionList.questions
+        console.log(data.problemsetQuestionList)
+    }
 })
