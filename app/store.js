@@ -43,14 +43,15 @@ export const store = proxy({
     // total -> pagination
     total: 0,
     problemQuestionList: [],
-    searchKeyWords: dayjs().format('YYYY-MM-DD'),
-    async fetchData(pageNumber = 1) {
+    pageNumber: 1,
+    searchKeyWords: "",
+    async fetchData() {
         this.isLoading = true
 
         const {data, errors, loading} = await client.query({
             query: PROBLEMSET_QUESTION_LIST_QUERY, variables: {
                 categorySlug: '',
-                skip: 50 * (pageNumber - 1),
+                skip: 50 * (this.pageNumber - 1),
                 limit: 50,
                 filters: {},
             }
@@ -61,18 +62,21 @@ export const store = proxy({
         this.isLoading = false;
     },
     async searchProblems() {
+        if(this.searchKeyWords === "") {
+            return this.fetchData()
+        }
         const {data, errors, loading} = await client.query({
             query: PROBLEMSET_QUESTION_LIST_QUERY, variables: {
                 categorySlug: 'all-code-essentials',
-                skip: 50 * (pageNumber - 1),
+                skip: 50 * (this.pageNumber - 1),
                 limit: 50,
                 filters: {
                     searchKeywords: this.searchKeyWords
                 },
             }
         })
-        this.total = data.problemsetQuestionList.total
         this.problemQuestionList = data.problemsetQuestionList.questions
+        console.log(this.problemQuestionList)
         console.log(data.problemsetQuestionList)
     }
 })
