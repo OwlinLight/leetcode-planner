@@ -47,11 +47,10 @@ function ProblemQuestionList() {
     }
 
     async function onPageNumberChange(pageNumber) {
-        store.pageNumber = pageNumber
         if (storeSnap.searchKeyWords === "") {
-            await store.fetchData()
+            await store.fetchData(pageNumber)
         } else {
-            await store.searchKeyWords()
+            await store.searchProblems(pageNumber)
         }
         setCurrentPage(pageNumber)
         window.scrollTo({
@@ -68,7 +67,16 @@ function ProblemQuestionList() {
 
     function addTodo(question) {
         const isExist = storeSnap.todos.some(todo => todo.frontendQuestionId === question.frontendQuestionId)
+
         if (isExist) {
+            const updatedTodos = storeSnap.todos.map(todo => {
+                if (todo.frontendQuestionId === question.frontendQuestionId) {
+                    return { ...todo, todoDate: question.todoDate };
+                }
+                return todo;
+            });
+
+            store.todos = updatedTodos;
             toast.success("Updated Date")
         } else {
             store.todos.push(question)
