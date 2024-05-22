@@ -52,7 +52,6 @@ function ProblemQuestionList() {
         } else {
             await store.searchProblems(pageNumber)
         }
-        setCurrentPage(pageNumber)
         window.scrollTo({
             top: 0,
             behavior: "smooth",
@@ -71,7 +70,7 @@ function ProblemQuestionList() {
         if (isExist) {
             const updatedTodos = storeSnap.todos.map(todo => {
                 if (todo.frontendQuestionId === question.frontendQuestionId) {
-                    return { ...todo, todoDate: question.todoDate };
+                    return {...todo, todoDate: question.todoDate};
                 }
                 return todo;
             });
@@ -184,7 +183,7 @@ function ProblemQuestionList() {
                     </TableBody>
                 </Table>
                 <div className="flex justify-center mb-6">
-                    <Pagination total={Math.ceil(store.total / 50)} page={currentPage} showControls
+                    <Pagination total={Math.ceil(store.total / 50)} page={storeSnap.pageNumber} showControls
                                 onChange={onPageNumberChange}/>
                 </div>
             </div>
