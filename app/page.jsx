@@ -1,16 +1,22 @@
 "use client";
 
-
-import { store } from "@/app/store";
-import { parseDate } from "@internationalized/date";
-import { Calendar } from "@nextui-org/calendar";
-import { Chip } from "@nextui-org/chip";
-import { Link } from "@nextui-org/link";
-
+import {store} from "@/app/store";
+import {parseDate} from "@internationalized/date";
+import {Calendar} from "@nextui-org/calendar";
+import {Chip} from "@nextui-org/chip";
+import {Link} from "@nextui-org/link";
 import dayjs from "dayjs";
-import { Flag, FlagOff } from "lucide-react";
-import React, { useState } from "react";
-import { useSnapshot } from "valtio";
+import {Flag, FlagOff} from "lucide-react";
+import React, {useState} from "react";
+import {useSnapshot} from "valtio";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
+
+function calendarObjToDateString(calendar) {
+	// YYYY-M-D -> YYYY-MM-DD
+	return dayjs(`${calendar.year}-${calendar.month}-${calendar.day}`).format(
+		"YYYY-MM-DD",
+	);
+}
 
 function QuestionLi({ question }) {
 	return (
@@ -49,6 +55,14 @@ export default function Home() {
 	const today = dayjs().format("YYYY-MM-DD");
 	const [calendarValue, setCalendarValue] = useState(parseDate(today));
 
+	// query string prep
+	// readonly
+	const searchParams = useSearchParams();
+	const pathname = usePathname();
+	// set by replacing with pathname?newSearchParams
+	const { replace } = useRouter();
+
+
 	// group todos by date
 	const groupedTodos = storeSnap.todos.reduce((acc, todo) => {
 		const date = todo.todoDate;
@@ -59,18 +73,28 @@ export default function Home() {
 		return acc;
 	}, {});
 
-	function onCalendarChange(dateObj) {
-		// console.log(dateObj)
-		let date = `${dateObj.year}-${dateObj.month}-${dateObj.day}`;
-		date = dayjs(date).format("YYYY-MM-DD");
-		setCalendarValue(parseDate(date));
+	function onCalendarChange(calendarObj) {
+		setCalendarValue(calendarObj);
+
+		const date = calendarObjToDateString(calendarObj);
 		store.todosDateFilter = date;
-		console.log(date);
+
+		// string process
+		const params = new URLSearchParams(searchParams);
+		params.set("date", date);
+		// actually replace the url
+		replace(`${pathname}?${params.toString()}`)
 	}
 
 	function onChipDateFilterClose() {
 		store.todosDateFilter = "";
 		setCalendarValue(parseDate(today));
+
+		// string process
+		const params = new URLSearchParams(searchParams);
+		params.delete("date");
+		// actually replace the url
+		replace(`${pathname}?${params.toString()}`)
 	}
 
 	function dateToHeadingText(date) {
