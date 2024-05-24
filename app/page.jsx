@@ -63,7 +63,7 @@ export default function Home() {
 	const { replace } = useRouter();
 
 	useEffect(() => {
-		const date = searchParams.get("date");
+		const date = dayjs(searchParams.get("date")).format('YYYY-MM-DD') ;
 		if (date) {
 			setCalendarValue(parseDate(date))
 			store.todosDateFilter = date;
