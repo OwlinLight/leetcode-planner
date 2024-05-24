@@ -7,7 +7,7 @@ import {Chip} from "@nextui-org/chip";
 import {Link} from "@nextui-org/link";
 import dayjs from "dayjs";
 import {Flag, FlagOff} from "lucide-react";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useSnapshot} from "valtio";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 
@@ -62,6 +62,13 @@ export default function Home() {
 	// set by replacing with pathname?newSearchParams
 	const { replace } = useRouter();
 
+	useEffect(() => {
+		const date = searchParams.get("date");
+		if (date) {
+			setCalendarValue(parseDate(date))
+			store.todosDateFilter = date;
+		}
+	}, []);
 
 	// group todos by date
 	const groupedTodos = storeSnap.todos.reduce((acc, todo) => {
@@ -83,7 +90,7 @@ export default function Home() {
 		const params = new URLSearchParams(searchParams);
 		params.set("date", date);
 		// actually replace the url
-		replace(`${pathname}?${params.toString()}`)
+		replace(`${pathname}?${params.toString()}`);
 	}
 
 	function onChipDateFilterClose() {
@@ -94,7 +101,7 @@ export default function Home() {
 		const params = new URLSearchParams(searchParams);
 		params.delete("date");
 		// actually replace the url
-		replace(`${pathname}?${params.toString()}`)
+		replace(`${pathname}?${params.toString()}`);
 	}
 
 	function dateToHeadingText(date) {
