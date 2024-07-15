@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import {Popover, PopoverContent, PopoverTrigger} from "@nextui-org/popover";
 import {Calendar} from "@nextui-org/calendar";
 import {parseDate} from "@internationalized/date";
+import {createTodo, fetchTodos} from "@/app/lib/action";
 
 function ProblemQuestionList() {
     const storeSnap = useSnapshot(store)
@@ -52,6 +53,7 @@ function ProblemQuestionList() {
         Hard: '#FF2D6F'
     }
 
+
     function addTodo(question) {
         const isExist = storeSnap.todos.some(todo => todo.frontendQuestionId === question.frontendQuestionId)
 
@@ -67,6 +69,7 @@ function ProblemQuestionList() {
             toast.success("Updated Date")
         } else {
             store.todos.push(question)
+            createTodo(question.frontendQuestionId, question.todoDate);
             toast.success("Added to your today todo list")
         }
     }

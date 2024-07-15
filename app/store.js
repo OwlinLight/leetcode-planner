@@ -1,7 +1,8 @@
 // store.js
-import {proxy} from "valtio";
+import {proxy, useSnapshot} from "valtio";
 import {gql} from "@apollo/client";
 import client from "@/app/apollo";
+import {fetchTodos} from "@/app/lib/action";
 
 const PROBLEMSET_QUESTION_LIST_QUERY = gql`
           query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) {
@@ -34,6 +35,21 @@ const PROBLEMSET_QUESTION_LIST_QUERY = gql`
           }
         `;
 
+const QUESTION_TITLE_QUERY = gql`
+    query questionTitle($titleSlug: String!) {
+      question(titleSlug: $titleSlug) {
+        questionId
+        questionFrontendId
+        title
+        titleSlug
+        isPaidOnly
+        difficulty
+        likes
+        dislikes
+        categoryTitle
+      }
+    }`
+
 export const store = proxy({
     isLoading: true,
     todos: [],
@@ -44,6 +60,30 @@ export const store = proxy({
     pageNumber: 1,
     problemQuestionList: [],
     searchKeyWords: "",
+    async fetchProblemsInfo(pageNumber = 1) {
+        const db_todos = await fetchTodos();
+        // const problemIds = db_todos.map(todo => todo.problem_id);
+        const problemIds = "1";
+
+        this.isLoading = true
+        // search by Id
+        // const {data, errors, loading} = await client.query({
+        //     query: PROBLEMSET_QUESTION_LIST_QUERY, variables: {
+        //         categorySlug: '',
+        //         skip: 50 * (pageNumber - 1),
+        //         limit: 50,
+        //         filters: {
+        //             frontendQuestionId: problemIds
+        //         },
+        //     }
+        // })
+        const {data, errors, loading} = await client.query({
+            query: QUESTION_TITLE_QUERY, variables: {
+                titleSlug: "palindrome-number",
+            }
+        })
+        console.log(data);
+    },
     async fetchData(pageNumber = 1) {
         this.isLoading = true
 
@@ -59,6 +99,8 @@ export const store = proxy({
         this.problemQuestionList = data.problemsetQuestionList.questions
         this.pageNumber = pageNumber
         this.isLoading = false;
+        // console.log(this.todos)
+        // console.log(data);
     },
     async searchProblems(pageNumber = 1) {
         this.isLoading = true

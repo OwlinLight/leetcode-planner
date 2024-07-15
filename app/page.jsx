@@ -15,17 +15,15 @@ function QuestionLi({question}) {
     return (
         <li key={question.frontendQuestionId}
             className="flex items-center space-x-2">
-            <input type="checkbox" className="checkbox"/>
+            <input type="checkbox" className="checkbox" disabled/>
             <Link className="text-black hover:text-blue-500" isExternal
                   href={`https://leetcode.com/problems/${question.titleSlug}`}>
                 <p>{question.frontendQuestionId}. {question.title}</p>
             </Link>
-
             {!question?.redo ?
-                <button className="btn btn-ghost">Redo It<Flag/></button> :
-                <button className="btn btn-ghost">Cancel Redo<FlagOff/>
+                <button className="btn btn-ghost" >Do It<Flag/></button> :
+                <button className="btn btn-ghost">Delete<FlagOff/>
                 </button>}
-
         </li>
     )
 }

@@ -6,7 +6,8 @@ import {store} from "@/app/store";
 
 export default function Home() {
     useEffect(() => {
-        store.fetchData()
+        store.fetchData();
+        store.fetchProblemsInfo();
     }, [])
     return (
         <div>
