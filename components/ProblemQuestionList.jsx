@@ -18,13 +18,15 @@ import {Calendar} from "@nextui-org/calendar";
 import {parseDate} from "@internationalized/date";
 import {createTodo, fetchTodos} from "@/app/lib/action";
 
+
 function ProblemQuestionList() {
     const storeSnap = useSnapshot(store)
     const today = dayjs().format("YYYY-MM-DD")
     const [calendarValue, setCalendarValue] = useState(parseDate(today))
 
     useEffect(() => {
-        store.fetchData()
+        store.fetchData();
+        store.fetchTodos();
     }, [])
 
     if (storeSnap.isLoading) {
@@ -55,23 +57,13 @@ function ProblemQuestionList() {
 
 
     function addTodo(question) {
-        const isExist = storeSnap.todos.some(todo => todo.frontendQuestionId === question.frontendQuestionId)
-
-        if (isExist) {
-            const updatedTodos = storeSnap.todos.map(todo => {
-                if (todo.frontendQuestionId === question.frontendQuestionId) {
-                    return {...todo, todoDate: question.todoDate};
-                }
-                return todo;
-            });
-
-            store.todos = updatedTodos;
-            toast.success("Updated Date")
-        } else {
-            store.todos.push(question)
-            createTodo(question.frontendQuestionId, question.todoDate);
-            toast.success("Added to your today todo list")
-        }
+        createTodo({
+            question_id: question.frontendQuestionId,
+            is_done: false, // default value for a new todo
+            title: question.title,
+            title_slug: question.titleSlug,
+            todo_date: question.todoDate
+        })
     }
 
     function addTodayTodo(question) {

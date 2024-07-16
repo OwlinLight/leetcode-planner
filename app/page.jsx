@@ -6,23 +6,31 @@ import {store} from "@/app/store";
 import {Flag, FlagOff} from 'lucide-react'
 import {useSnapshot} from "valtio";
 import {Link} from "@nextui-org/link";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import dayjs from "dayjs";
 import {parseDate} from "@internationalized/date";
 import {Chip} from "@nextui-org/chip";
+import {deleteTodo, fetchTodos, updateTodo} from "@/app/lib/action";
+
 
 function QuestionLi({question}) {
     return (
-        <li key={question.frontendQuestionId}
+        <li key={question.question_id}
             className="flex items-center space-x-2">
-            <input type="checkbox" className="checkbox" disabled/>
+            <input type="checkbox" className="checkbox" checked={question.is_done}/>
             <Link className="text-black hover:text-blue-500" isExternal
-                  href={`https://leetcode.com/problems/${question.titleSlug}`}>
-                <p>{question.frontendQuestionId}. {question.title}</p>
+                  href={`https://leetcode.com/problems/${question.title_slug}`}>
+                <p>{question.question_id}. {question.title}</p>
             </Link>
-            {!question?.redo ?
-                <button className="btn btn-ghost" >Do It<Flag/></button> :
-                <button className="btn btn-ghost">Delete<FlagOff/>
+            {!question?.is_done ?
+                <button className="btn btn-ghost" onClick={async () => {
+                    await updateTodo(question.question_id, true);
+                    await store.fetchTodos()
+                }}>Finished<Flag/></button> :
+                <button className="btn btn-ghost" onClick={async () => {
+                    await deleteTodo(question.question_id)
+                    await store.fetchTodos()
+                }}>Delete<FlagOff/>
                 </button>}
         </li>
     )
@@ -33,9 +41,15 @@ export default function Home() {
     const today = dayjs().format("YYYY-MM-DD")
     const [calendarValue, setCalendarValue] = useState(parseDate(today))
 
+    useEffect(() => {
+        async function helper() {
+            await store.fetchTodos()
+        }
+        helper()
+    }, []);
     // group todos by date
     const groupedTodos = storeSnap.todos.reduce((acc, todo) => {
-        const date = todo.todoDate;
+        const date = todo.todo_date;
         if (!acc[date]) {
             acc[date] = [];
         }
@@ -83,12 +97,12 @@ export default function Home() {
                         <div>
                             {storeSnap.todos
                                 .filter(todo => {
-                                    return todo.todoDate === storeSnap.todosDateFilter
+                                    return todo.todo_date === storeSnap.todosDateFilter
                                 })
                                 .map((todo, index) => {
                                     return (
-                                        <div key={todo.frontendQuestionId}>
-                                            {index === 0 && <h2 className="text-2xl font-bold"> {todo.todoDate}</h2>}
+                                        <div key={todo.question_id}>
+                                            {index === 0 && <h2 className="text-2xl font-bold"> {todo.todo_date}</h2>}
                                             <QuestionLi question={todo}/>
                                         </div>
                                     )
@@ -106,7 +120,7 @@ export default function Home() {
                                     </h2>
                                     <ul>
                                         {todos.map((todo) => (
-                                            <QuestionLi question={todo} key={todo.frontendQuestionId}/>
+                                            <QuestionLi question={todo} key={todo.question_id}/>
                                         ))}
                                     </ul>
                                 </div>

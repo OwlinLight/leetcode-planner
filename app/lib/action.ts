@@ -3,29 +3,49 @@
 import {Database} from "@/app/lib/schema";
 import {createClient} from "@/utils/supabase/server";
 import {cookies} from "next/headers";
+import {supabase} from "@/util/supabase/db";
 
-// export async function createTodo(formData: FormData) {
-export async function createTodo(problemId:number, planDate:Date) {
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-
-    // const problemId =  formData.get('problemId');
-    // const planDate = formData.get('planDate');
-
+export async function createTodo(todo: { question_id: any; is_done: any; title: any; title_slug: any; todo_date: any; }) {
     const { data, error } = await supabase
         .from('todos')
         .insert([
-            { problem_id: problemId, is_done: false, plan_date: planDate },
+            {
+                question_id: todo.question_id,
+                is_done: todo.is_done,
+                title: todo.title,
+                title_slug: todo.title_slug,
+                todo_date: todo.todo_date
+            }
         ])
-        .select()
+        .select();
+
+    if (error) {
+        console.error("Error creating todo:", error);
+        return;
+    }
+
+    console.log("Todo created successfully:", data);
 }
 
 export async function fetchTodos() {
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-
     let { data: todos, error } = await supabase
         .from('todos')
-        .select('problem_id, is_done, plan_date')
+        .select('*')
     return todos;
+}
+
+export async function updateTodo(questionId: any, isDone: any) {
+    const { data, error } = await supabase
+        .from('todos')
+        .update({ 'is_done': isDone})
+        .eq('question_id', questionId)
+        .select()
+}
+
+export async function deleteTodo(questionId: any) {
+    const {error} = await supabase
+        .from('todos')
+        .delete()
+        .eq('question_id', questionId)
+
 }

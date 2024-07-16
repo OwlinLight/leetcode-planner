@@ -12,24 +12,30 @@ export interface Database {
             todos: {
                 Row: {
                     id: number
+                    question_id: number
+                    is_done: boolean
+                    title: string
+                    title_slug: string
                     created_at: string
-                    problem_id: number
-                    isDone: boolean
-                    plan_date: string
+                    todo_date: string
                 }
                 Insert: {
                     id?: number
+                    question_id: number
+                    is_done: boolean
+                    title: string
+                    title_slug: string
                     created_at?: string
-                    problem_id: number
-                    isDone: boolean
-                    plan_date: string
+                    todo_date: string
                 }
                 Update: {
                     id?: number
+                    question_id?: number
+                    is_done?: boolean
+                    title?: string
+                    title_slug?: string
                     created_at?: string
-                    problem_id?: number
-                    isDone?: boolean
-                    plan_date?: string
+                    todo_date?: string
                 }
             }
         }
