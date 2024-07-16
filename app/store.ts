@@ -53,9 +53,20 @@ const QUESTION_TITLE_QUERY = gql`
       }
     }`
 
+interface Todo {
+    id: number;
+    question_id: number;
+    is_done: boolean;
+    title: string;
+    title_slug: string;
+    created_at: string;
+    todo_date: string;
+}
+
+
 export const store = proxy({
     isLoading: true,
-    todos: [],
+    todos: [] as Todo[],
     todosDateFilter: "",
     // total -> pagination
     total: 0,
@@ -65,7 +76,7 @@ export const store = proxy({
     searchKeyWords: "",
     async fetchTodos() {
         const db_todos = await fetchTodos();
-        this.todos = db_todos;
+        this.todos = db_todos!;
     },
     async fetchData(pageNumber = 1) {
         this.isLoading = true
