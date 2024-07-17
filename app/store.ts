@@ -5,8 +5,6 @@ import client from "@/app/apollo";
 import {fetchTodos} from "@/app/lib/action";
 import { Database } from '@/app/lib/schema'
 
-
-
 const PROBLEMSET_QUESTION_LIST_QUERY = gql`
           query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) {
             problemsetQuestionList: questionList(
@@ -38,20 +36,16 @@ const PROBLEMSET_QUESTION_LIST_QUERY = gql`
           }
         `;
 
-const QUESTION_TITLE_QUERY = gql`
-    query questionTitle($titleSlug: String!) {
-      question(titleSlug: $titleSlug) {
-        questionId
-        questionFrontendId
+const RECENT_AC_SUBMISSIONS = gql`
+    query recentAcSubmissions($username: String!, $limit: Int!) {
+      recentAcSubmissionList(username: $username, limit: $limit) {
+        id
         title
         titleSlug
-        isPaidOnly
-        difficulty
-        likes
-        dislikes
-        categoryTitle
+        timestamp
       }
-    }`
+    } 
+`;
 
 interface Todo {
     id: number;
@@ -74,6 +68,17 @@ export const store = proxy({
     pageNumber: 1,
     problemQuestionList: [],
     searchKeyWords: "",
+    async fetchRecentACSubmissions(username: any, limit = 15) {
+        this.isLoading = true
+        const {data, errors, loading} = await client.query({
+            query: RECENT_AC_SUBMISSIONS, variables: {
+                username: username,
+                limit: limit,
+            }
+        })
+        this.isLoading = false;
+        console.log(data);
+    },
     async fetchTodos() {
         const db_todos = await fetchTodos();
         this.todos = db_todos!;
