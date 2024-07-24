@@ -4,6 +4,8 @@ import {gql} from "@apollo/client";
 import client from "@/app/apollo";
 import {fetchTodos} from "@/app/lib/action";
 import { Database } from '@/app/lib/schema'
+//TODO
+const CHAT_URL = ``;
 
 const PROBLEMSET_QUESTION_LIST_QUERY = gql`
           query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) {
@@ -68,6 +70,8 @@ export const store = proxy({
     pageNumber: 1,
     problemQuestionList: [],
     searchKeyWords: "",
+    chatPrompt: "",
+    message: "",
     async fetchRecentACSubmissions(username: any, limit = 15) {
         this.isLoading = true
         const {data, errors, loading} = await client.query({
@@ -117,5 +121,31 @@ export const store = proxy({
         this.problemQuestionList = data.problemsetQuestionList.questions
         this.pageNumber = pageNumber
         this.isLoading = false
+    },
+    async searchProblemsOnPrompt(){
+        this.isLoading = true
+        if(this.chatPrompt === ""){
+            return this.fetchData()
+        }
+        try {
+            const res = await fetch(CHAT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({prompt: this.chatPrompt}),
+            });
+
+            if (!res.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await res.json();
+            console.log(data);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            this.isLoading = false;
+        }
     }
-})
+    }
+)

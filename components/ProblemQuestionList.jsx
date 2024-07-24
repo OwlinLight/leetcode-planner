@@ -23,6 +23,7 @@ function ProblemQuestionList() {
     const storeSnap = useSnapshot(store)
     const today = dayjs().format("YYYY-MM-DD")
     const [calendarValue, setCalendarValue] = useState(parseDate(today))
+    const [inputValue, setInputValue] = useState('');
 
     useEffect(() => {
         store.fetchData();
@@ -88,90 +89,109 @@ function ProblemQuestionList() {
         }
     }
 
-    return (
-        <div className="my-2">
-            <Table aria-label="leetcode table" className="mb-6">
-                <TableHeader>
-                    <TableColumn>Title</TableColumn>
-                    <TableColumn>Difficulty</TableColumn>
-                    <TableColumn>AC Rate</TableColumn>
-                    {/*<TableColumn>Status</TableColumn>*/}
-                    <TableColumn>Schedule</TableColumn>
-                </TableHeader>
-                <TableBody>
-                    {storeSnap.problemQuestionList.map((question) => {
-                        return (
-                            <TableRow key={question.frontendQuestionId}>
-                                <TableCell className="max-w-40">
-                                    <Link className="text-black hover:text-blue-500" isExternal
-                                          href={`https://leetcode.com/problems/${question.titleSlug}`}>
-                                        <p>{question.frontendQuestionId}. {question.title}</p>
-                                    </Link>
-                                    <div className="flex flex-row flex-wrap">
-                                        {question.topicTags.map(tag => {
-                                            return (
-                                                <div className="mr-2 mt-2 badge badge-ghost"
-                                                     key={tag.id}>{tag.name}</div>
-                                            )
-                                        })}
-                                    </div>
-                                    {question.paidOnly && <div className="badge badge-warning mr-2 mt-2">
-                                        Premium
-                                    </div>}
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        console.log('Submitted:', inputValue);
+        // Add your submit logic here
+        store.chatPrompt = inputValue;
+        const data = await store.searchProblemsOnPrompt();
+    }
+    const handleChange = (event) => {
+        setInputValue(event.target.value);
+    };
+        return (
+            <div className="my-2">
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        placeholder="Enter your prompt here..."
+                        value={inputValue}
+                        onChange={handleChange}
+                    />
+                    <button type="submit">Submit</button>
+                </form>
+                <Table aria-label="leetcode table" className="mb-6">
+                    <TableHeader>
+                        <TableColumn>Title</TableColumn>
+                        <TableColumn>Difficulty</TableColumn>
+                        <TableColumn>AC Rate</TableColumn>
+                        {/*<TableColumn>Status</TableColumn>*/}
+                        <TableColumn>Schedule</TableColumn>
+                    </TableHeader>
+                    <TableBody>
+                        {storeSnap.problemQuestionList.map((question) => {
+                            return (
+                                <TableRow key={question.frontendQuestionId}>
+                                    <TableCell className="max-w-40">
+                                        <Link className="text-black hover:text-blue-500" isExternal
+                                              href={`https://leetcode.com/problems/${question.titleSlug}`}>
+                                            <p>{question.frontendQuestionId}. {question.title}</p>
+                                        </Link>
+                                        <div className="flex flex-row flex-wrap">
+                                            {question.topicTags.map(tag => {
+                                                return (
+                                                    <div className="mr-2 mt-2 badge badge-ghost"
+                                                         key={tag.id}>{tag.name}</div>
+                                                )
+                                            })}
+                                        </div>
+                                        {question.paidOnly && <div className="badge badge-warning mr-2 mt-2">
+                                            Premium
+                                        </div>}
 
-                                </TableCell>
-                                <TableCell>
-                                    <p style={{color: difficultyColors[question.difficulty]}}>{question.difficulty}</p>
-                                </TableCell>
-                                <TableCell>
-                                    {question.acRate.toFixed(1)}%
-                                </TableCell>
-                                {/*<TableCell>*/}
-                                {/*    Todo/Redo/Done*/}
-                                {/*</TableCell>*/}
-                                <TableCell>
-                                    <div className="flex flex-row">
-                                        <button
-                                            className="btn btn-ghost"
-                                            onClick={() => addTodayTodo(question)}>
-                                            Today
-                                        </button>
+                                    </TableCell>
+                                    <TableCell>
+                                        <p style={{color: difficultyColors[question.difficulty]}}>{question.difficulty}</p>
+                                    </TableCell>
+                                    <TableCell>
+                                        {question.acRate.toFixed(1)}%
+                                    </TableCell>
+                                    {/*<TableCell>*/}
+                                    {/*    Todo/Redo/Done*/}
+                                    {/*</TableCell>*/}
+                                    <TableCell>
+                                        <div className="flex flex-row">
+                                            <button
+                                                className="btn btn-ghost"
+                                                onClick={() => addTodayTodo(question)}>
+                                                Today
+                                            </button>
 
-                                        <button
-                                            className="btn btn-ghost"
-                                            onClick={() => addTomorrowTodo(question)}>
-                                            Tomorrow
-                                        </button>
+                                            <button
+                                                className="btn btn-ghost"
+                                                onClick={() => addTomorrowTodo(question)}>
+                                                Tomorrow
+                                            </button>
 
-                                        <Popover
-                                            placement="bottom"
-                                            onClose={() => setCalendarValue(parseDate(today))}>
-                                            <PopoverTrigger>
-                                                <button className="btn btn-ghost">...</button>
-                                            </PopoverTrigger>
-                                            <PopoverContent>
-                                                <Calendar onChange={onCalendarChange(question)}
-                                                          value={calendarValue}/>
-                                            </PopoverContent>
-                                        </Popover>
+                                            <Popover
+                                                placement="bottom"
+                                                onClose={() => setCalendarValue(parseDate(today))}>
+                                                <PopoverTrigger>
+                                                    <button className="btn btn-ghost">...</button>
+                                                </PopoverTrigger>
+                                                <PopoverContent>
+                                                    <Calendar onChange={onCalendarChange(question)}
+                                                              value={calendarValue}/>
+                                                </PopoverContent>
+                                            </Popover>
 
-                                        {/*<button className="btn btn-ghost">Inbox</button>*/}
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        )
-                    })}
-                </TableBody>
-            </Table>
-            <div className="flex justify-center mb-6">
-                <Pagination
-                    showControls
-                    page={storeSnap.pageNumber}
-                    total={Math.ceil(store.total / 50)}
-                    onChange={onPageNumberChange}/>
+                                            {/*<button className="btn btn-ghost">Inbox</button>*/}
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        })}
+                    </TableBody>
+                </Table>
+                <div className="flex justify-center mb-6">
+                    <Pagination
+                        showControls
+                        page={storeSnap.pageNumber}
+                        total={Math.ceil(store.total / 50)}
+                        onChange={onPageNumberChange}/>
+                </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
 
 export default ProblemQuestionList;
