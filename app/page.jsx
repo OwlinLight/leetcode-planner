@@ -23,7 +23,6 @@ function QuestionLi({question}) {
                 <p>{question.question_id}. {question.title}</p>
             </Link>
             {!question?.is_done ?
-
                 <button className="btn btn-ghost" onClick={async () => {
                     await updateTodo(question.question_id, true);
                     await store.fetchTodos()
