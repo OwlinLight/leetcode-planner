@@ -1,30 +1,45 @@
 'use client'
 import { cookies } from 'next/headers'
 import {useEffect, useState} from "react";
+import Timer from "@/app/test/Timer";
 
 export default function Page() {
-    const [hours, setHours] = useState<number>(0);
-    const [minutes, setMinutes] = useState<number>(0);
-    const [seconds, setSeconds] = useState<number>(0);
+    const [startTimestamp, setStartTimestamp] = useState<number>(0);
+    const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
+    const [freeze, setFreeze] = useState<boolean>(false);
+
+    const updateElapsedSeconds = () =>{
+        // Calculate elapsed seconds from the start timestamp
+        const currentTimestamp = Math.floor(Date.now() / 1000); // Current time in seconds
+        const elapsed = currentTimestamp - startTimestamp;
+        setElapsedSeconds(elapsed);
+    }
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setSeconds(prevSeconds => (prevSeconds + 1) % 60);
-            setMinutes(prevMinutes => (prevMinutes + Math.floor((seconds + 1) / 60)) % 60);
-            setHours(prevHours => (prevHours + Math.floor((minutes + Math.floor((seconds + 1) / 60)) / 60)) % 24);
-        }, 1000);
+        // Simulate fetching startTimestamp from an external source
+        const fetchStartTimestamp = async () => {
+            // Simulate an API call
+            const response = await new Promise<{ timestamp: number }>(resolve => {
+                setTimeout(() => {
+                    resolve({ timestamp: 1722800286 }); // Simulated timestamp from an external source
+                }, 1000);
+            });
+            setStartTimestamp(response.timestamp);
+        };
+        fetchStartTimestamp();
+        updateElapsedSeconds();
+    }, [freeze, updateElapsedSeconds]);
 
-        return () => clearInterval(interval); // Cleanup the interval on component unmount
-    }, [seconds, minutes]);
+    const handleSubmit = () => {
+        setFreeze(true); // Freeze the timer after submitting
+    };
 
     return (
         <div>
-            <h1>Timer</h1>
-            <span className="countdown font-mono text-2xl">
-        <span style={{ "--value": hours }}></span>:
-        <span style={{ "--value": minutes }}></span>:
-        <span style={{ "--value": seconds }}></span>
-      </span>
+            <div>
+                <label htmlFor="start-time">Start Time (Unix Timestamp): </label>
+                <button className="btn btn-accent" onClick={handleSubmit}>Finish the problem</button>
+            </div>
+            <Timer elapsedSeconds={elapsedSeconds} freeze={freeze} />
         </div>
-    );
-};
+    );};
