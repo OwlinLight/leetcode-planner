@@ -17,14 +17,14 @@ export default function Page() {
         setElapsedSeconds(elapsed);
     }
 
-    const fetchStartTimestamp = async (titleSlug: String) => {
+    const fetchStartTimestamp = async (userName: String, titleSlug: String) => {
         // Simulate an API call
         // const response = await new Promise<{ timestamp: number }>(resolve => {
         //     setTimeout(() => {
         //         resolve({ timestamp: 1722800286 }); // Simulated timestamp from an external source
         //     }, 1000);
         // });
-        const data = await fetchRecentACSubmissions('pedia');
+        const data = await fetchRecentACSubmissions(userName);
         const recentAcSubmissionList = data.recentAcSubmissionList;
         console.log(recentAcSubmissionList);
         // Check if the response has the expected data
@@ -43,11 +43,9 @@ export default function Page() {
         }
     };
 
-
-
     useEffect(() => {
         // Simulate fetching startTimestamp from an external source
-        fetchStartTimestamp('max-value-of-equation');
+        fetchStartTimestamp('pedia', 'max-value-of-equation');
         updateElapsedSeconds();
     }, [freeze, updateElapsedSeconds]);
 

@@ -88,28 +88,8 @@ function ProblemQuestionList() {
             addTodo(questionWithTodoDate)
         }
     }
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        console.log('Submitted:', inputValue);
-        // Add your submit logic here
-        store.chatPrompt = inputValue;
-        const data = await store.searchProblemsOnPrompt();
-    }
-    const handleChange = (event) => {
-        setInputValue(event.target.value);
-    };
         return (
             <div className="my-2">
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        placeholder="Enter your prompt here..."
-                        value={inputValue}
-                        onChange={handleChange}
-                    />
-                    <button type="submit">Submit</button>
-                </form>
                 <Table aria-label="leetcode table" className="mb-6">
                     <TableHeader>
                         <TableColumn>Title</TableColumn>

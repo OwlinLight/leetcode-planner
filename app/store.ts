@@ -7,19 +7,19 @@ import {Database} from '@/app/lib/schema'
 import {PROBLEM_QUESTION_LIST_QUERY, RECENT_AC_SUBMISSIONS} from "@/app/queries";
 
 
-interface Todo {
-    id: number;
-    question_id: number;
-    is_done: boolean;
-    title: string;
-    title_slug: string;
-    created_at: string;
-    todo_date: string;
-}
+// interface Todo {
+//     id: number;
+//     question_id: number;
+//     is_done: boolean;
+//     title: string;
+//     title_slug: string;
+//     created_at: string;
+//     todo_date: string;
+// }
 
 export const store = proxy({
         isLoading: true,
-        todos: [] as Todo[],
+        todos: [] as any[],
         todosDateFilter: "",
         // total -> pagination
         total: 0,
@@ -29,18 +29,9 @@ export const store = proxy({
         searchKeyWords: "",
         chatPrompt: "",
         message: "",
-
         async fetchTodos() {
             const db_todos = await fetchTodos();
-            this.todos = db_todos!;
-
-            const {data: detail, errors: detailError, loading: isDetailLoading} = await client.query({
-                query: RECENT_AC_SUBMISSIONS, variables: {
-                    submissionId: 1330737677
-                }
-            })
-            console.log(detail)
-            console.log(detailError)
+            this.todos = db_todos!
         },
         async fetchData(pageNumber = 1) {
             this.isLoading = true

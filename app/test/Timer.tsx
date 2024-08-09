@@ -43,9 +43,9 @@ function Timer({ elapsedSeconds, freeze }: TimerProps) {
         <div>
             <h1>Timer</h1>
             <span className="countdown font-mono text-2xl">
-                <span style={{ "--value": hours }}>{hours.toString().padStart(2, '0')}</span>:
-                <span style={{ "--value": minutes }}>{minutes.toString().padStart(2, '0')}</span>:
-                <span style={{ "--value": seconds }}>{seconds.toString().padStart(2, '0')}</span>
+                <span style={{ "--value": hours }}></span>:
+                <span style={{ "--value": minutes }}></span>:
+                <span style={{ "--value": seconds }}></span>
             </span>
         </div>
     );
