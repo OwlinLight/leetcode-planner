@@ -39,6 +39,8 @@ function Timer({ elapsedSeconds, freeze }: TimerProps) {
         }
     }, [elapsedSeconds, freeze]);
 
+
+    // @ts-ignore
     return (
         <div>
             <h1>Timer</h1>
