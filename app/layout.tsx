@@ -47,7 +47,7 @@ export default function RootLayout({
                 <main className="container mx-auto max-w-7xl px-6 flex-grow">
                     {children}
                 </main>
-                <Toaster />
+                <Toaster richColors={true} />
             </div>
         </Providers>
         </body>

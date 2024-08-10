@@ -65,6 +65,7 @@ function ProblemQuestionList() {
             title_slug: question.titleSlug,
             todo_date: question.todoDate
         })
+        toast.success(`${question.frontendQuestionId}. ${question.title} added to ${question.todoDate}`);
     }
 
     function addTodayTodo(question) {

@@ -35,7 +35,7 @@ function QuestionLi({question}) {
     }
 
     async function handleDelete(id) {
-
+        toast.warning(`Todo ${id} has been deleted`)
         await deleteTodo(id);
         await store.fetchTodos();
     }
@@ -99,7 +99,6 @@ export default function Home() {
         async function helper() {
             await store.fetchTodos()
         }
-
         helper()
     }, []);
     // group todos by date
