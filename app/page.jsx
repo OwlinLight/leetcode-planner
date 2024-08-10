@@ -73,7 +73,7 @@ function QuestionLi({question}) {
             ) : (
                 !question?.finished_at ? (
                     <>
-                        <Timer elapsedSeconds={dayjs()-dayjs(question.started_at)} freeze={false}/>
+                        <Timer elapsedSeconds={dayjs().diff(dayjs(question.started_at), 'seconds')} freeze={false}/>
                         <button
                             className="btn btn-outline btn-success"
                             onClick={() => handleFinish(question.id)}
@@ -83,7 +83,7 @@ function QuestionLi({question}) {
                         </button>
                     </>
                 ) : (
-                    <Timer elapsedSeconds={dayjs()-dayjs(question.started_at)} freeze={true}/>
+                    <Timer elapsedSeconds={dayjs(question.finished_at).diff(dayjs(question.started_at), 'seconds')} freeze={true}/>
                 )
             )}
         </li>
