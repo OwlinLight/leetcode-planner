@@ -63,7 +63,8 @@ function ProblemQuestionList() {
             is_done: false, // default value for a new todo
             title: question.title,
             title_slug: question.titleSlug,
-            todo_date: question.todoDate
+            todo_date: question.todoDate,
+            user_id: store.user.id
         })
         toast.success(`${question.frontendQuestionId}. ${question.title} added to ${question.todoDate}`);
     }

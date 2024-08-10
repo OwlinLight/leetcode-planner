@@ -2,7 +2,7 @@
 
 import {supabase} from "@/util/supabase/db";
 
-export async function createTodo(todo: { question_id: any; is_done: any; title: any; title_slug: any; todo_date: any; }) {
+export async function createTodo(todo: any) {
     const { data, error } = await supabase
         .from('todos')
         .insert([
@@ -11,7 +11,8 @@ export async function createTodo(todo: { question_id: any; is_done: any; title: 
                 is_done: todo.is_done,
                 title: todo.title,
                 title_slug: todo.title_slug,
-                todo_date: todo.todo_date
+                todo_date: todo.todo_date,
+                user_id: todo.user_id
             }
         ])
         .select();

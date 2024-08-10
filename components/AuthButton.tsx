@@ -5,6 +5,7 @@ import {redirect, useRouter} from "next/navigation";
 import {LogInIcon, LogOutIcon} from "lucide-react";
 import {useEffect, useState} from "react";
 import {Button} from "@nextui-org/button";
+import {store} from "@/app/store";
 
 
 export default function AuthButton() {
@@ -17,6 +18,7 @@ export default function AuthButton() {
         async function fetchUser() {
             const { data: { user } } = await supabase.auth.getUser();
             setUser(user);
+            store.user = user;
             setLoading(false);
         }
         fetchUser();
@@ -26,6 +28,9 @@ export default function AuthButton() {
         const supabase = createClient();
         await supabase.auth.signOut();
         setUser(null);
+        store.user = null;
+        //TODO: improve performance
+        store.fetchTodos();
     };
 
     if (loading) {

@@ -8,6 +8,8 @@ import {PROBLEM_QUESTION_LIST_QUERY, RECENT_AC_SUBMISSIONS} from "@/app/queries"
 
 
 export const store = proxy({
+    // TODO: legit?
+        user: null as any,
         isLoading: true,
         todos: [] as any[],
         todosDateFilter: "",
