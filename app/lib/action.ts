@@ -44,5 +44,22 @@ export async function deleteTodo(questionId: any) {
         .from('todos')
         .delete()
         .eq('question_id', questionId)
+}
 
+export async function startTodo(questionId: any) {
+    const { data, error } = await supabase
+        .from('todos')
+        // .update({ 'started_at': supabase.rpc('now')})
+        .update({ 'started_at': new Date().toISOString()})
+        .eq('question_id', questionId)
+        .select()
+}
+
+export async function finishTodo(questionId: any) {
+    const { data, error } = await supabase
+        .from('todos')
+        // .update({ 'started_at': supabase.rpc('now')})
+        .update({ 'finished_at': new Date().toISOString()})
+        .eq('question_id', questionId)
+        .select()
 }

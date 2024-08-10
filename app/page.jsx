@@ -10,28 +10,62 @@ import React, {useEffect, useState} from "react";
 import dayjs from "dayjs";
 import {parseDate} from "@internationalized/date";
 import {Chip} from "@nextui-org/chip";
-import {deleteTodo, fetchTodos, updateTodo} from "@/app/lib/action";
+import {deleteTodo, fetchTodos, finishTodo, startTodo, updateTodo} from "@/app/lib/action";
 
 
 function QuestionLi({question}) {
+
+    async function handleStart(questionId){
+        await startTodo(questionId);
+        await store.fetchTodos();
+    }
+
+    async function handleFinish(questionId) {
+        await finishTodo(questionId);
+        await store.fetchTodos();
+    }
+
+    async function handleDelete(questionId) {
+        await deleteTodo(questionId);
+        await store.fetchTodos();
+    }
+
     return (
         <li key={question.question_id}
             className="flex items-center space-x-2">
-            <input type="checkbox" className="checkbox" checked={question.is_done}/>
+            <input type="checkbox" className="checkbox" checked={question.finished_at}/>
             <Link className="text-black hover:text-blue-500" isExternal
                   href={`https://leetcode.com/problems/${question.title_slug}`}>
                 <p>{question.question_id}. {question.title}</p>
             </Link>
-            {!question?.is_done ?
-                <button className="btn btn-ghost" onClick={async () => {
-                    await updateTodo(question.question_id, true);
-                    await store.fetchTodos()
-                }}>Finished<Flag/></button> :
-                <button className="btn btn-ghost" onClick={async () => {
-                    await deleteTodo(question.question_id)
-                    await store.fetchTodos()
-                }}>Delete<FlagOff/>
-                </button>}
+            {!question?.started_at ? (
+                <button
+                    className="btn btn-ghost"
+                    onClick={() => handleStart(question.question_id)}
+                >
+                    Start Timer
+                    <Flag/>
+                </button>
+            ) : (
+                !question?.finished_at ? (
+                        <button
+                            className="btn btn-ghost"
+                            onClick={() => handleFinish(question.question_id)}
+                        >
+                            Finish
+                            <Flag/>
+                        </button>
+                    )
+                    : (
+                        <button
+                            className="btn btn-ghost"
+                            onClick={() => handleDelete(question.question_id)}
+                        >
+                            Delete
+                            <FlagOff/>
+                        </button>
+                    )
+            )}
         </li>
     )
 }

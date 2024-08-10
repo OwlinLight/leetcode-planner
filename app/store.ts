@@ -7,16 +7,6 @@ import {Database} from '@/app/lib/schema'
 import {PROBLEM_QUESTION_LIST_QUERY, RECENT_AC_SUBMISSIONS} from "@/app/queries";
 
 
-// interface Todo {
-//     id: number;
-//     question_id: number;
-//     is_done: boolean;
-//     title: string;
-//     title_slug: string;
-//     created_at: string;
-//     todo_date: string;
-// }
-
 export const store = proxy({
         isLoading: true,
         todos: [] as any[],
@@ -31,7 +21,7 @@ export const store = proxy({
         message: "",
         async fetchTodos() {
             const db_todos = await fetchTodos();
-            this.todos = db_todos!
+            store.todos = db_todos!
         },
         async fetchData(pageNumber = 1) {
             this.isLoading = true
@@ -70,3 +60,5 @@ export const store = proxy({
         },
     },
 )
+
+
