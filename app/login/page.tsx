@@ -24,7 +24,7 @@ export default async function Test() {
             <Auth
                 supabaseClient={supabase}
                 appearance={{ theme: ThemeSupa }}
-                providers={["github"]}
+                providers={["google", "github"]}
             />
         </>
     );
