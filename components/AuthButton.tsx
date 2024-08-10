@@ -20,11 +20,12 @@ export default function AuthButton() {
             setLoading(false);
         }
         fetchUser();
-    }, []);
+    }, [user]);
 
     const signOut = async () => {
         const supabase = createClient();
         await supabase.auth.signOut();
+        setUser(null);
     };
 
     if (loading) {

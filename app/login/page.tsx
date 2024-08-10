@@ -7,6 +7,9 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 const supabase = createClient();
 
 export default async function Test() {
+
+
+
     const signInWithGoogle = async () => {
         supabase.auth.signInWithOAuth({
             provider: "google",
@@ -25,6 +28,7 @@ export default async function Test() {
                 supabaseClient={supabase}
                 appearance={{ theme: ThemeSupa }}
                 providers={["google", "github"]}
+                redirectTo="http://localhost:3000/problems"
             />
         </>
     );
