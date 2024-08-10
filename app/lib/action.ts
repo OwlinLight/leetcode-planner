@@ -28,38 +28,40 @@ export async function fetchTodos() {
     let { data: todos, error } = await supabase
         .from('todos')
         .select('*')
+        .order('id', { ascending: true }); // Order by 'id' in ascending order
     return todos;
 }
 
-export async function updateTodo(questionId: any, isDone: any) {
+export async function updateTodo(id: any, isDone: any) {
     const { data, error } = await supabase
         .from('todos')
         .update({ 'is_done': isDone})
-        .eq('question_id', questionId)
+        .eq('id', id)
         .select()
 }
 
-export async function deleteTodo(questionId: any) {
+export async function deleteTodo(id: any) {
     const {error} = await supabase
         .from('todos')
         .delete()
-        .eq('question_id', questionId)
+        .eq('id', id)
 }
 
-export async function startTodo(questionId: any) {
+export async function startTodo(id: any) {
     const { data, error } = await supabase
         .from('todos')
         // .update({ 'started_at': supabase.rpc('now')})
         .update({ 'started_at': new Date().toISOString()})
-        .eq('question_id', questionId)
+        .eq('id', id)
         .select()
 }
 
-export async function finishTodo(questionId: any) {
+export async function finishTodo(id: any) {
     const { data, error } = await supabase
         .from('todos')
         // .update({ 'started_at': supabase.rpc('now')})
         .update({ 'finished_at': new Date().toISOString()})
-        .eq('question_id', questionId)
+        .eq('id', id)
         .select()
 }
+

@@ -1,8 +1,8 @@
 'use client'
 import { cookies } from 'next/headers'
 import {useEffect, useState} from "react";
-import Timer from "@/app/test/Timer";
-import {fetchRecentACSubmissions} from "@/app/action";
+import Timer from "@/components/Timer";
+import {fetchRecentACSubmissions} from "@/app/gqlAction";
 
 export default function Page() {
     const [startTimestamp, setStartTimestamp] = useState<number>(0);

@@ -3,7 +3,7 @@
 import {Calendar} from "@nextui-org/calendar";
 
 import {store} from "@/app/store";
-import {Flag, FlagOff} from 'lucide-react'
+import {DeleteIcon, Flag, FlagOff, RecycleIcon, TrashIcon} from 'lucide-react'
 import {useSnapshot} from "valtio";
 import {Link} from "@nextui-org/link";
 import React, {useEffect, useState} from "react";
@@ -11,60 +11,80 @@ import dayjs from "dayjs";
 import {parseDate} from "@internationalized/date";
 import {Chip} from "@nextui-org/chip";
 import {deleteTodo, fetchTodos, finishTodo, startTodo, updateTodo} from "@/app/lib/action";
+import {toast} from "sonner";
+import timer from "@/components/Timer";
+import Timer from "@/components/Timer";
 
 
 function QuestionLi({question}) {
 
-    async function handleStart(questionId){
-        await startTodo(questionId);
+    async function handleStart(id){
+        toast(`Timer Start at ${new Date().toTimeString()}`, {
+            cancel: {
+                label: 'Timer',
+                onClick: () => console.log('Noted'),
+            },
+        });
+        await startTodo(id);
         await store.fetchTodos();
     }
 
-    async function handleFinish(questionId) {
-        await finishTodo(questionId);
+    async function handleFinish(id) {
+        await finishTodo(id);
         await store.fetchTodos();
     }
 
-    async function handleDelete(questionId) {
-        await deleteTodo(questionId);
+    async function handleDelete(id) {
+
+        await deleteTodo(id);
         await store.fetchTodos();
     }
 
     return (
-        <li key={question.question_id}
+        <li key={question.id}
             className="flex items-center space-x-2">
-            <input type="checkbox" className="checkbox" checked={question.finished_at}/>
+            <div className="dropdown dropdown-left">
+                <div tabIndex="0" role="button" className="btn-ghost btn m-1"><TrashIcon/></div>
+                <ul tabIndex="0" className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                    <button
+                        className="btn btn-ghost"
+                        onClick={() => handleDelete(question.id)}
+                    >
+                        Delete
+                    </button>
+                </ul>
+            </div>
+            <input type="checkbox" className="checkbox" checked={question.finished_at} disabled={true}/>
             <Link className="text-black hover:text-blue-500" isExternal
                   href={`https://leetcode.com/problems/${question.title_slug}`}>
                 <p>{question.question_id}. {question.title}</p>
             </Link>
             {!question?.started_at ? (
-                <button
-                    className="btn btn-ghost"
-                    onClick={() => handleStart(question.question_id)}
-                >
-                    Start Timer
-                    <Flag/>
-                </button>
+                <Link className="text-black hover:text-blue-500" isExternal
+                      href={`https://leetcode.com/problems/${question.title_slug}`}>
+                    <button
+                        className="btn btn-button"
+                        onClick={() => handleStart(question.id)}
+                    >
+                        Start Timer
+                        <Flag/>
+                    </button>
+                </Link>
             ) : (
                 !question?.finished_at ? (
+                    <>
+                        <Timer elapsedSeconds={dayjs()-dayjs(question.started_at)} freeze={false}/>
                         <button
-                            className="btn btn-ghost"
-                            onClick={() => handleFinish(question.question_id)}
+                            className="btn btn-outline btn-success"
+                            onClick={() => handleFinish(question.id)}
                         >
-                            Finish
+                            Finished!
                             <Flag/>
                         </button>
-                    )
-                    : (
-                        <button
-                            className="btn btn-ghost"
-                            onClick={() => handleDelete(question.question_id)}
-                        >
-                            Delete
-                            <FlagOff/>
-                        </button>
-                    )
+                    </>
+                ) : (
+                    <Timer elapsedSeconds={dayjs()-dayjs(question.started_at)} freeze={true}/>
+                )
             )}
         </li>
     )
@@ -79,6 +99,7 @@ export default function Home() {
         async function helper() {
             await store.fetchTodos()
         }
+
         helper()
     }, []);
     // group todos by date
@@ -135,7 +156,7 @@ export default function Home() {
                                 })
                                 .map((todo, index) => {
                                     return (
-                                        <div key={todo.question_id}>
+                                        <div key={todo.id}>
                                             {index === 0 && <h2 className="text-2xl font-bold"> {todo.todo_date}</h2>}
                                             <QuestionLi question={todo}/>
                                         </div>
@@ -154,7 +175,7 @@ export default function Home() {
                                     </h2>
                                     <ul>
                                         {todos.map((todo) => (
-                                            <QuestionLi question={todo} key={todo.question_id}/>
+                                            <QuestionLi question={todo} key={todo.id}/>
                                         ))}
                                     </ul>
                                 </div>
