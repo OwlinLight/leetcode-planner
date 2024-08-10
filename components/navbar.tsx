@@ -32,6 +32,7 @@ import {
 import {Logo} from "@/components/icons";
 import {store} from "@/app/store";
 import {LogInIcon} from "lucide-react";
+import AuthButton from "@/components/AuthButton";
 
 
 export const Navbar = () => {
@@ -104,9 +105,7 @@ export const Navbar = () => {
                     {/*<ThemeSwitch/>*/}
                 </NavbarItem>
                 <NavbarItem className="hidden sm:flex gap-2">
-                    <NextLink href={siteConfig.auth.login.href}>
-                        <Button className="btn-accent"><LogInIcon/>Login</Button>
-                    </NextLink>
+                    <AuthButton/>
                 </NavbarItem>
 
                 {/* <NavbarItem className="hidden md:flex">
