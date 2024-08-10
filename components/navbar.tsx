@@ -31,9 +31,11 @@ import {
 
 import {Logo} from "@/components/icons";
 import {store} from "@/app/store";
+import {LogInIcon} from "lucide-react";
 
 
 export const Navbar = () => {
+
     async function search(ev: any) {
         store.searchKeyWords = ev.target.value
         setTimeout(async function () {
@@ -100,6 +102,11 @@ export const Navbar = () => {
                         <GithubIcon className="text-default-500"/>
                     </Link>
                     {/*<ThemeSwitch/>*/}
+                </NavbarItem>
+                <NavbarItem className="hidden sm:flex gap-2">
+                    <NextLink href={siteConfig.auth.login.href}>
+                        <Button className="btn-accent"><LogInIcon/>Login</Button>
+                    </NextLink>
                 </NavbarItem>
 
                 {/* <NavbarItem className="hidden md:flex">

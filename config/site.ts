@@ -42,11 +42,17 @@ export const siteConfig = {
             label: "Help & Feedback",
             href: "/help-feedback",
         },
-        {
+    ],
+    auth: {
+        login: {
+            label: "login",
+            href: "/login",
+        },
+        logout: {
             label: "Logout",
             href: "/logout",
-        },
-    ],
+        }
+    },
     links: {
         github: "https://github.com/nextui-org/nextui",
         twitter: "https://twitter.com/getnextui",
