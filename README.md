@@ -1,8 +1,4 @@
-# FIXME:
+# Dev Process:
 
-# TODO:
-GPT give couple options to users, like suggestions, rating, similar questions, ...
-
-Stats
-
-# Design:
+-[x] Todo list
+-[x] auth
