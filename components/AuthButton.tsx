@@ -31,6 +31,7 @@ export default function AuthButton() {
         store.user = null;
         //TODO: improve performance
         store.fetchTodos();
+        router.push("/login");
     };
 
     if (loading) {

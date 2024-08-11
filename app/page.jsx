@@ -21,7 +21,7 @@ function QuestionLi({question}) {
     async function handleStart(id){
         toast(`Timer Start at ${new Date().toTimeString()}`, {
             cancel: {
-                label: 'Timer',
+                label: 'Dismiss',
                 onClick: () => console.log('Noted'),
             },
         });

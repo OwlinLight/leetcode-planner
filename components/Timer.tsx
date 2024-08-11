@@ -42,7 +42,7 @@ function Timer({ elapsedSeconds, freeze }: TimerProps) {
 
     return (
         <div>
-            <h1>Timer</h1>
+            {/*<h1>Timer</h1>*/}
             <span className="countdown font-mono text-2xl">
                 <span style={{ "--value": hours } as React.CSSProperties}></span>:
                 <span style={{ "--value": minutes } as React.CSSProperties }></span>:
