@@ -3,7 +3,7 @@
 import {Calendar} from "@nextui-org/calendar";
 
 import {store} from "@/app/store";
-import {DeleteIcon, Flag, FlagOff, RecycleIcon, TrashIcon} from 'lucide-react'
+import {Flag, FlagOff, RecycleIcon, TrashIcon} from 'lucide-react'
 import {useSnapshot} from "valtio";
 import {Link} from "@nextui-org/link";
 import React, {useEffect, useState} from "react";
