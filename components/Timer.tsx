@@ -40,14 +40,13 @@ function Timer({ elapsedSeconds, freeze }: TimerProps) {
     }, [elapsedSeconds, freeze]);
 
 
-    // @ts-ignore
     return (
         <div>
             <h1>Timer</h1>
             <span className="countdown font-mono text-2xl">
-                <span style={{ "--value": hours }}></span>:
-                <span style={{ "--value": minutes }}></span>:
-                <span style={{ "--value": seconds }}></span>
+                <span style={{ "--value": hours } as React.CSSProperties}></span>:
+                <span style={{ "--value": minutes } as React.CSSProperties }></span>:
+                <span style={{ "--value": seconds } as React.CSSProperties}></span>
             </span>
         </div>
     );
