@@ -12,6 +12,14 @@ export const siteConfig = {
             label: "Problems",
             href: "/problems",
         },
+        {
+            label: "Reports",
+            href: "/report",
+        },
+        {
+            label: "Settings",
+            href: "/settings",
+        },
     ],
     navMenuItems: [
         {
