@@ -27,9 +27,8 @@ export default function Login() {
                                 },
                             },
                         }}
-                        
                         providers={['github']}
-                        redirectTo="/"
+                        redirectTo="http://localhost:3000"
                     />
                 </div>
             </div>

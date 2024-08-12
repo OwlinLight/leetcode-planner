@@ -22,15 +22,19 @@ export default function AuthButton() {
             setLoading(false);
         }
         fetchUser();
-    }, [user]);
+        store.fetchTodos();
+    }, []);
 
     const signOut = async () => {
         const supabase = createClient();
+        setLoading(true);
         await supabase.auth.signOut();
         setUser(null);
         store.user = null;
         //TODO: improve performance
-        store.fetchTodos();
+        setLoading(false);
+        // store.fetchTodos();
+        store.todos = [];
         router.push("/login");
     };
 
