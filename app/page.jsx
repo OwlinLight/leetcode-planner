@@ -3,22 +3,22 @@
 import {Calendar} from "@nextui-org/calendar";
 
 import {store} from "@/app/store";
-import {Flag, FlagOff, RecycleIcon, TrashIcon} from 'lucide-react'
+import {Flag, TrashIcon} from 'lucide-react'
 import {useSnapshot} from "valtio";
 import {Link} from "@nextui-org/link";
 import React, {useEffect, useState} from "react";
 import dayjs from "dayjs";
 import {parseDate} from "@internationalized/date";
 import {Chip} from "@nextui-org/chip";
-import {deleteTodo, fetchTodos, finishTodo, startTodo, updateTodo} from "@/app/lib/action";
+import {deleteTodo, finishTodo, startTodo} from "@/app/lib/action";
 import {toast} from "sonner";
-import timer from "@/components/Timer";
 import Timer from "@/components/Timer";
-
+import {useRouter} from "next/navigation";
+import {createClient} from "@/util/supabase/client";
 
 function QuestionLi({question}) {
 
-    async function handleStart(id){
+    async function handleStart(id) {
         toast(`Timer Start at ${new Date().toTimeString()}`, {
             cancel: {
                 label: 'Dismiss',
@@ -83,22 +83,46 @@ function QuestionLi({question}) {
                         </button>
                     </>
                 ) : (
-                    <Timer elapsedSeconds={dayjs(question.finished_at).diff(dayjs(question.started_at), 'seconds')} freeze={true}/>
+                    <Timer elapsedSeconds={dayjs(question.finished_at).diff(dayjs(question.started_at), 'seconds')}
+                           freeze={true}/>
                 )
             )}
         </li>
     )
 }
 
+
+const supabase = createClient()
+
 export default function Home() {
+    const router = useRouter()
     const storeSnap = useSnapshot(store)
     const today = dayjs().format("YYYY-MM-DD")
     const [calendarValue, setCalendarValue] = useState(parseDate(today))
+
+    async function checkUserSession() {
+
+        const {data: {session}} = await supabase.auth.getSession();
+        console.log(session);
+
+        if (session) {
+            // User is logged in
+            console.log(session);
+            // Show logged-in content, access protected routes, etc.
+        } else {
+            await router.push('/login');
+        }
+    }
+
+    useEffect(() => {
+        checkUserSession()
+    }, []);
 
     useEffect(() => {
         async function helper() {
             await store.fetchTodos()
         }
+
         helper()
     }, []);
     // group todos by date
