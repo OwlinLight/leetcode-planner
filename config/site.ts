@@ -15,7 +15,15 @@ export const siteConfig = {
         {
             label: "Collections",
             href: "/collections"
-        }
+        },
+        {
+            label: "Reports",
+            href: "/report",
+        },
+        {
+            label: "Settings",
+            href: "/settings",
+        },
     ],
     navMenuItems: [
         {

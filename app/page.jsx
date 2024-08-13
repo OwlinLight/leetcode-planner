@@ -15,31 +15,32 @@ import {toast} from "sonner";
 import Timer from "@/components/Timer";
 import {useRouter} from "next/navigation";
 import {createClient} from "@/util/supabase/client";
+import FinishButton from "@/components/FinishButton";
+
+
+async function handleStart(id) {
+    toast(`Timer Start at ${new Date().toTimeString()}`, {
+        cancel: {
+            label: 'Dismiss',
+            onClick: () => console.log('Noted'),
+        },
+    });
+    await startTodo(id);
+    await store.fetchTodos();
+}
+
+export async function handleFinish(id) {
+    await finishTodo(id);
+    // await store.fetchTodos();
+}
+
+async function handleDelete(id) {
+    toast.warning(`Todo ${id} has been deleted`)
+    await deleteTodo(id);
+    await store.fetchTodos();
+}
 
 function QuestionLi({question}) {
-
-    async function handleStart(id) {
-        toast(`Timer Start at ${new Date().toTimeString()}`, {
-            cancel: {
-                label: 'Dismiss',
-                onClick: () => console.log('Noted'),
-            },
-        });
-        await startTodo(id);
-        await store.fetchTodos();
-    }
-
-    async function handleFinish(id) {
-        await finishTodo(id);
-        await store.fetchTodos();
-    }
-
-    async function handleDelete(id) {
-        toast.warning(`Todo ${id} has been deleted`)
-        await deleteTodo(id);
-        await store.fetchTodos();
-    }
-
     return (
         <li key={question.id}
             className="flex items-center space-x-2">
@@ -74,13 +75,11 @@ function QuestionLi({question}) {
                 !question?.finished_at ? (
                     <>
                         <Timer elapsedSeconds={dayjs().diff(dayjs(question.started_at), 'seconds')} freeze={false}/>
-                        <button
-                            className="btn btn-outline btn-success"
-                            onClick={() => handleFinish(question.id)}
-                        >
-                            Finished!
-                            <Flag/>
-                        </button>
+                        <FinishButton
+                            id={question.id}
+                            questionInfo={question.title}
+                            elapsedSeconds={dayjs().diff(dayjs(question.started_at), 'seconds')}
+                        />
                     </>
                 ) : (
                     <Timer elapsedSeconds={dayjs(question.finished_at).diff(dayjs(question.started_at), 'seconds')}
