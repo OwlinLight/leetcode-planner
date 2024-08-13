@@ -66,3 +66,21 @@ export async function finishTodo(id: any) {
         .select()
 }
 
+export async function createCollection(name: any, description: any, parent_id: any) {
+    // name not added
+    const { data, error } = await supabase
+        .from('collections')
+        .insert([
+            { description: description, parent_id: parent_id},
+        ])
+        .select()
+    console.log(error);
+}
+
+export async function fetchCollections(){
+    let { data: collections, error } = await supabase
+        .from('collections')
+        .select('*')
+    return collections;
+}
+

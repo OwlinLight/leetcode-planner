@@ -11,6 +11,7 @@
 	"dependencies": {
 		"@ai-sdk/google": "^0.0.36",
 		"@apollo/client": "^3.10.4",
+		"@nextui-org/accordion": "^2.0.38",
 		"@nextui-org/button": "^2.0.31",
 		"@nextui-org/calendar": "^2.0.4",
 		"@nextui-org/chip": "^2.0.28",
