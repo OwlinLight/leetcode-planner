@@ -16,7 +16,8 @@ import dayjs from "dayjs";
 import {Popover, PopoverContent, PopoverTrigger} from "@nextui-org/popover";
 import {Calendar} from "@nextui-org/calendar";
 import {parseDate} from "@internationalized/date";
-import {createTodo, fetchTodos} from "@/app/lib/action";
+import {addCollectionProblems, createTodo, fetchTodos} from "@/app/lib/action";
+import SelectCollection from "@/components/SelectCollection";
 
 
 function ProblemQuestionList() {
@@ -90,8 +91,21 @@ function ProblemQuestionList() {
             addTodo(questionWithTodoDate)
         }
     }
+
+    function addToCollection(question){
+        if(store.selectedCollection){
+            addCollectionProblems(store.selectedCollection, question.frontendQuestionId);
+            toast.success(`${question.frontendQuestionId}. ${question.title} added to ${store.selectedCollection}`)
+        }else{
+            toast.warning(`please make selection first`)
+        }
+    }
+
         return (
             <div className="my-2">
+                <div className="flex justify-end w-full">
+                    <SelectCollection/>
+                </div>
                 <Table aria-label="leetcode table" className="mb-6">
                     <TableHeader>
                         <TableColumn>Title</TableColumn>
@@ -99,6 +113,7 @@ function ProblemQuestionList() {
                         <TableColumn>AC Rate</TableColumn>
                         {/*<TableColumn>Status</TableColumn>*/}
                         <TableColumn>Schedule</TableColumn>
+                        <TableColumn>Add to Collection</TableColumn>
                     </TableHeader>
                     <TableBody>
                         {storeSnap.problemQuestionList.map((question) => {
@@ -160,6 +175,13 @@ function ProblemQuestionList() {
                                             {/*<button className="btn btn-ghost">Inbox</button>*/}
                                         </div>
                                     </TableCell>
+                                    <TableCell>
+                                        <button
+                                            className="btn btn-accent"
+                                            onClick={() => addToCollection(question)}>
+                                            +
+                                        </button>
+                                    </TableCell>
                                 </TableRow>
                             )
                         })}
@@ -174,6 +196,6 @@ function ProblemQuestionList() {
                 </div>
             </div>
         );
-    }
+}
 
 export default ProblemQuestionList;

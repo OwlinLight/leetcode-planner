@@ -4,9 +4,15 @@ import {fetchCollections} from "@/app/lib/action";
 import {useEffect, useState} from "react";
 import {store} from "@/app/store";
 
-
-export default function SelectCollection({value, onChange}:any) {
+export default function SelectCollection() {
     const [collections, setCollections] = useState([] as any);
+    const [selectedCollection, setSelectedCollection] = useState<any>(store.selectedCollection);
+
+    const handleSelectionChange = (collection: any) => {
+        setSelectedCollection(collection);
+        store.selectedCollection = collection;
+        console.log(collection);
+    };
 
     useEffect(() => {
         async function getCollections() {
@@ -23,8 +29,9 @@ export default function SelectCollection({value, onChange}:any) {
                 label="Selected collection"
                 placeholder="selected collection"
                 className="max-w-xs"
-                value={value}
-                onChange={e => onChange(e.target.value)}
+                defaultSelectedKeys={selectedCollection}
+                value={selectedCollection}
+                onChange={e => handleSelectionChange(e.target.value)}
             >
                 {collections.map((collection: any) => (
                     <SelectItem key={collection.id}>
@@ -34,4 +41,6 @@ export default function SelectCollection({value, onChange}:any) {
             </Select>
         </div>
     );
+
+
 }

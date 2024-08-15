@@ -2,16 +2,24 @@
 import React, {useEffect, useState} from 'react';
 import {Button} from "@nextui-org/button";
 import {InfoIcon, PlusIcon} from "lucide-react";
-import {createCollection, fetchCollections} from "@/app/lib/action";
+import {createCollection, fetchCollectionProblems, fetchCollections} from "@/app/lib/action";
 import {toast} from "sonner";
 import {store} from "@/app/store";
 import {Accordion, AccordionItem} from "@nextui-org/accordion";
-import SelectCollection from "@/app/collections/SelectCollection";
+import SelectCollection from "@/components/SelectCollection";
 
 function CollectionPage() {
     // State to manage the currently expanded accordion panel
     const [expanded, setExpanded] = useState(false);
-    const [selectedCollection, setSelectedCollection] = useState<any>(store.selectedCollection);
+    const [problems, setProblems] = useState<any>([]);
+
+    const fetchProbelms = async (collectionId: number) => {
+        let data = await fetchCollectionProblems(collectionId);
+        setProblems(data);
+    }
+    useEffect(() => {
+        fetchProbelms(store.selectedCollection);
+    }, []);
 
     function addCollection(){
         createCollection(null, null, null);
@@ -19,13 +27,8 @@ function CollectionPage() {
     }
 
     function showCollection(){
+        const data = fetchProbelms(store.selectedCollection);
         console.log(store.selectedCollection);
-    }
-
-    function handleSelectionChange(collection: any){
-        setSelectedCollection(collection);
-        store.selectedCollection = collection;
-        console.log(collection);
     }
 
     return (
@@ -33,13 +36,19 @@ function CollectionPage() {
             <Button className="btn-accent" onClick={addCollection}>
                 <PlusIcon/>
             </Button>
-            <SelectCollection value={selectedCollection} onChange={handleSelectionChange}/>
+            <SelectCollection/>
             {/*{store.selectedCollection ? (<p> current selected {store.selectedCollection}</p>) : ("no select")}*/}
             <Button className="btn-accent" onClick={showCollection}>
                 <InfoIcon/>
             </Button>
             <h1 className="text-xl font-bold text-primary text-center my-4">LCP – Collection Page</h1>
-
+            {problems ? problems.map((problem: any) => (
+                <li key={problem.id}>
+                    Problem ID: {problem.problem_id}, Index: {problem.idx !== null ? problem.idx : "N/A"}
+                </li>
+            )): (
+                <p>No problems found for this collection.</p>
+            )}
 
             <Accordion>
                 <AccordionItem key="1" aria-label="Accordion 1" subtitle="Press to expand" title="Accordion 1">

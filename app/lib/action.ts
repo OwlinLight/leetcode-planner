@@ -84,3 +84,19 @@ export async function fetchCollections(){
     return collections;
 }
 
+export async function addCollectionProblems(collection_id:number , problem_id:number ){
+    const { data, error } = await supabase
+        .from('collectionproblems')
+        .insert([
+            { collection_id: collection_id , problem_id: problem_id },
+        ])
+        .select()
+}
+
+export async function fetchCollectionProblems(collection_id: number){
+    const {data: problems, error} = await supabase
+        .from('collectionproblems')
+        .select('*')
+        .eq('collection_id', collection_id);
+    return problems
+}
