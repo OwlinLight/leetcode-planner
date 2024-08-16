@@ -21,7 +21,7 @@ export const store = proxy({
         searchKeyWords: "",
         chatPrompt: "",
         message: "",
-        selectedCollection: null as any,
+        selectedCollectionId: null as any,
         async fetchTodos() {
             const db_todos = await fetchTodos();
             store.todos = db_todos!

@@ -1,24 +1,25 @@
 'use client'
-import {Select, SelectSection, SelectItem} from "@nextui-org/select";
+import {Select, SelectItem} from "@nextui-org/select";
 import {fetchCollections} from "@/app/lib/action";
 import {useEffect, useState} from "react";
 import {store} from "@/app/store";
 
 export default function SelectCollection() {
     const [collections, setCollections] = useState([] as any);
-    const [selectedCollection, setSelectedCollection] = useState<any>(store.selectedCollection);
+    const [selectedCollectionId, setSelectedCollectionId] = useState<any>(store.selectedCollectionId);
 
-    const handleSelectionChange = (collection: any) => {
-        setSelectedCollection(collection);
-        store.selectedCollection = collection;
-        console.log(collection);
+    const handleSelectionChange = (id: any) => {
+        setSelectedCollectionId(id);
+        store.selectedCollectionId = id;
+        console.log(id);
     };
 
     useEffect(() => {
         async function getCollections() {
-            const data = await fetchCollections();
+            const data: any = await fetchCollections();
             setCollections(data);
         }
+
         getCollections();
         console.log(collections);
     }, [])
@@ -29,8 +30,8 @@ export default function SelectCollection() {
                 label="Selected collection"
                 placeholder="selected collection"
                 className="max-w-xs"
-                defaultSelectedKeys={selectedCollection}
-                value={selectedCollection}
+                defaultSelectedKeys={selectedCollectionId}
+                value={selectedCollectionId}
                 onChange={e => handleSelectionChange(e.target.value)}
             >
                 {collections.map((collection: any) => (
@@ -41,6 +42,4 @@ export default function SelectCollection() {
             </Select>
         </div>
     );
-
-
 }

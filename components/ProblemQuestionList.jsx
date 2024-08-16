@@ -93,9 +93,9 @@ function ProblemQuestionList() {
     }
 
     function addToCollection(question){
-        if(store.selectedCollection){
-            addCollectionProblems(store.selectedCollection, question.frontendQuestionId);
-            toast.success(`${question.frontendQuestionId}. ${question.title} added to ${store.selectedCollection}`)
+        if(store.selectedCollectionId){
+            addCollectionProblems(store.selectedCollectionId, question.frontendQuestionId);
+            toast.success(`${question.frontendQuestionId}. ${question.title} added to ${store.selectedCollectionId}`)
         }else{
             toast.warning(`please make selection first`)
         }

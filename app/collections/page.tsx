@@ -7,28 +7,29 @@ import {toast} from "sonner";
 import {store} from "@/app/store";
 import {Accordion, AccordionItem} from "@nextui-org/accordion";
 import SelectCollection from "@/components/SelectCollection";
+import {useSnapshot} from "valtio";
 
 function CollectionPage() {
     // State to manage the currently expanded accordion panel
     const [expanded, setExpanded] = useState(false);
     const [problems, setProblems] = useState<any>([]);
 
-    const fetchProbelms = async (collectionId: number) => {
+    const {selectedCollectionId} = useSnapshot(store)
+
+    const fetchProblems = async (collectionId: number) => {
         let data = await fetchCollectionProblems(collectionId);
         setProblems(data);
+        console.log(data)
     }
+
     useEffect(() => {
-        fetchProbelms(store.selectedCollection);
-    }, []);
+        fetchProblems
+    (store.selectedCollectionId);
+    }, [selectedCollectionId]);
 
     function addCollection(){
         createCollection(null, null, null);
         toast.success("new collection created");
-    }
-
-    function showCollection(){
-        const data = fetchProbelms(store.selectedCollection);
-        console.log(store.selectedCollection);
     }
 
     return (
@@ -38,10 +39,8 @@ function CollectionPage() {
             </Button>
             <SelectCollection/>
             {/*{store.selectedCollection ? (<p> current selected {store.selectedCollection}</p>) : ("no select")}*/}
-            <Button className="btn-accent" onClick={showCollection}>
-                <InfoIcon/>
-            </Button>
             <h1 className="text-xl font-bold text-primary text-center my-4">LCP – Collection Page</h1>
+
             {problems ? problems.map((problem: any) => (
                 <li key={problem.id}>
                     Problem ID: {problem.problem_id}, Index: {problem.idx !== null ? problem.idx : "N/A"}
